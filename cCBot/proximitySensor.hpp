@@ -6,7 +6,6 @@ class proximitySensor{
     double val;
     double previousVal;
     int _pin;
-    const int th = 150;
   public:
     void reload();
     double get();
