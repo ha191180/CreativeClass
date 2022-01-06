@@ -43,6 +43,7 @@ void motors::moveBackwardForMillisec(int millisec){
     lp->backward();
     rp->backward();
   }
+  this->halt();
 }
 
 void motors::moveBackwardEveryMillisec(int milliSecond){
@@ -72,7 +73,7 @@ void motors::turnLeft(int inputValue){
 void motors::turnLeftEveryMillisec(int milliSecond){
   if(millis() - turnLeftEveryMillisecTimer > milliSecond)
   {
-    for (int i = 0; i < 1000; i++){
+    for (int i = 0; i < 500; i++){
       this->turnLeft();
     }
     this->halt();
@@ -88,7 +89,7 @@ void motors::turnRight(){
 void motors::turnRightEveryMillisec(int milliSecond){
   if(millis() - turnRightEveryMillisecTimer> milliSecond)
   {
-    for (int i = 0; i < 1000; i++){
+    for (int i = 0; i < 500; i++){
       this->turnRight();
     }
     this->halt();
@@ -134,4 +135,11 @@ void motors::halt(){
 void motors::haltQuick(){
   lp->haltQuick();
   rp->haltQuick();
+}
+
+void motors::punch(){
+  for (int i = 0; i < 2000; i++){
+    this->moveForward();
+  }
+  this->halt();
 }

@@ -31,6 +31,13 @@ bool proximitySensors::isObjDetected(){
   else return false;
 }
 
+bool proximitySensors::isObjTouched(){
+  if (getLeftValue() < 10 && getRightValue() < 10 && getCenterValue() < 10){
+    return true;
+  }
+  else return false;
+}
+
 bool proximitySensors::isAimLeft(){
   return (lp->get() - rp->get() > 100.0);
 }

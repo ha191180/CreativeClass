@@ -35,6 +35,7 @@ class motors{
     void haltQuick();
     void goLeft90();
     void turnLeftSelMillisec(int millisec);
+    void punch();
 };
 
 

@@ -16,6 +16,7 @@ class proximitySensors{
                      int cPinInput,
                      int lPinInput);
     bool isObjDetected();
+    bool isObjTouched();
     bool isAimLeft();
     bool isAimRight();
     double getLeftValue();

@@ -22,7 +22,7 @@ void Test() {
 void Main() {
   enum modes runMode = mSumo;
   robot.sumo();
-  
+  while (true);
 }
 
 void setup(){

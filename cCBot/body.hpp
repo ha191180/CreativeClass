@@ -55,8 +55,8 @@ class body {
 		// functinos for sumo
 		bool isObjDetected(); // return boolean value. true: a object is detected, false: else.
 		bool isObjDisappeared(); //return boolean value. true: a object is dropped from the field.
-		bool isObjDisappearedRecheck(); //return boolean value. true: a object is dropped from the field.
-		void pushObj();
+		bool isEdge(); //return boolean value. true: a object is dropped from the field.
+		int pushObj();
 
 		// debug
 		void debugOut();

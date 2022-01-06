@@ -82,7 +82,7 @@ bool body::isObjDisappeared(){ // return boolean value. true: a object is droppe
 
 
 
-bool body::isObjDisappearedRecheck(){
+bool body::isEdge(){
   int total = 0;
   for (int c = 0; c < 100; c++){
     for (int i = 0; i < 4; i++){
@@ -98,25 +98,36 @@ bool body::isObjDisappearedRecheck(){
 }
 
 
-void body::pushObj(){
-  bool isObjOnField= true;
+int body::pushObj(){
   while(!isObjDetected()){
     proxSens->reload();
     wheel->turnLeftEveryMillisec(50);
   }
 
+  /*
   while(isObjOnField){
-    proxSens->reloadEveryMillisec(100);
+    proxSens->reloadEveryMillisec(500);
+
+    if (isEdge())
+    {
+      wheel->moveBackwardForMillisec(100);
+    }
+    
     if (isObjDetected()){
       if (isObjDisappeared()){
         isObjOnField = false;
       }
       else {
         if (proxSens->getCenterValue() > 30.0){
+          proxSens->reload();
           wheel->moveForward();
         }
+        else if (proxSens->isObjTouched()){
+          wheel->punch();
+          delay(1000);
+        }
         else {
-          wheel->moveForwardEveryMillisec(80);
+          wheel->moveForwardEveryMillisec(100);
         }
       }
     }
@@ -133,21 +144,96 @@ void body::pushObj(){
       }
       else 
       {
-        wheel->turnLeft();
+        wheel->moveForwardEveryMillisec(100);
       }
     }
   }
-  return;
+  */
+
+ // PHASE1 ////////////////////////////////////////////// aproaching
+  bool phase1 = true;
+  while(phase1){
+    proxSens->reload();
+
+    if (isObjDetected()){
+      if (proxSens->getCenterValue() > 20.0){
+        for (int i = 0; i < 3000; i++)
+        {
+          wheel->moveForward();
+        }
+        wheel->halt();
+      }
+      else{
+        phase1 = false;
+        break;
+      }
+    }
+    else{
+      if (proxSens->isAimLeft())
+      {
+        wheel->turnRightEveryMillisec(100);
+      }
+      else if (proxSens->isAimRight()) 
+      {
+        wheel->turnLeftEveryMillisec(100);
+      }
+      else 
+      {
+        return 0;
+      }
+    }
+  }
+
+  // PHASE2 /////////////////////////////////////////////////// touching
+  bool phase2 = true;
+  while(phase2){
+    proxSens->reload();
+
+    if (isObjDetected()){
+      if (proxSens->isObjTouched()){
+        phase2 = false;
+        break;
+      }
+      else {
+        wheel->moveForwardEveryMillisec(100);
+      }
+    }
+    else{
+      if (proxSens->isAimLeft())
+      {
+        wheel->turnRightEveryMillisec(100);
+      }
+      else if (proxSens->isAimRight()) 
+      {
+        wheel->turnLeftEveryMillisec(100);
+      }
+      else 
+      {
+        return 0;
+      }
+    }
+  }
+  // PHASE3 /////////////////////////////////////////////////// pushing
+  bool phase3 = true;
+  while (phase3){
+    if (isEdge()){
+      phase3 = false;
+      wheel->moveBackwardForMillisec(100);
+      delay(1000);
+      return 1;
+    }
+    else {
+      wheel->moveForwardEveryMillisec(100);
+    }
+  }
 }
 
 
 void body::sumo(){
   int count = 0;
-  while (count != 3)
+  while (count <= 3)
   {
-    pushObj();
-    wheel->moveBackwardForMillisec(500);
-    count++;
+    count += pushObj();
   }
   return;
 }
