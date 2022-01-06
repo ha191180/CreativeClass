@@ -1,6 +1,6 @@
 #ifndef LINETRACESENSORS_H_INCLUDE
 #define LINETRACESENSORS_H_INCLUDE
-#include "linetraceSensor.hpp"
+#include "./linetraceSensor.hpp"
 
 class linetraceSensors{
 	private:
@@ -8,14 +8,14 @@ class linetraceSensors{
 		linetraceSensor *rcp;
 		linetraceSensor *lcp;
 		linetraceSensor *llp;
-    char val;
+    byte val;
 	public:
 		linetraceSensors(int rrPinInput, 
 													int rcPinInput,
 													int lcPinInput,
 													int llPinInput);
 		void reload();
-    char get();
+    byte get();
 };
 
 #endif // !LINETRACESENSORS_H_INCLUDE

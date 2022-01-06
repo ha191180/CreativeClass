@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "proximitySensors.hpp"
+#include "./proximitySensors.hpp"
 
 proximitySensors::proximitySensors(int rPinInput,
                                    int cPinInput,

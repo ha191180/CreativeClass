@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "motors.hpp"
+#include "./motors.hpp"
 
 motors::motors(int lRevPinInput,
                int lPwmPinInput,
@@ -23,7 +23,10 @@ void motors::moveForward(int inputValue){
 void motors::moveForwardEveryMillisec(int milliSecond){
   if(millis() - moveForwardEveryMillisecTimer > milliSecond)
   {
-    moveForward();
+    for (int i = 0; i < 1000; i++){
+      moveForward();
+    }
+    halt();
     moveForwardEveryMillisecTimer = millis();
   }
 }
@@ -33,24 +36,46 @@ void motors::moveBackward(){
   rp->backward();
 }
 
-void motors::moveBackwardForSec(int second){
-  moveBackwardForSecTimer = millis();
-  while (millis() - moveBackwardForSecTimer < second * 1000)
+void motors::moveBackwardForMillisec(int millisec){
+  moveBackwardForMillisecTimer = millis();
+  while (millis() - moveBackwardForMillisecTimer < millisec)
   {
     lp->backward();
     rp->backward();
   }
 }
 
+void motors::moveBackwardEveryMillisec(int milliSecond){
+  if(millis() - moveBackwardEveryMillisecTimer > milliSecond)
+  {
+    for (int i = 0; i < 1000; i++){
+      moveBackward();
+    }
+    halt();
+    moveBackwardEveryMillisecTimer = millis();
+  }
+}
+
+
+
+
 void motors::turnLeft(){
   lp->backward();
   rp->forward();
 }
 
+void motors::turnLeft(int inputValue){
+  lp->backward(inputValue);
+  rp->forward(inputValue);
+}
+
 void motors::turnLeftEveryMillisec(int milliSecond){
   if(millis() - turnLeftEveryMillisecTimer > milliSecond)
   {
-    turnLeft();
+    for (int i = 0; i < 1000; i++){
+      this->turnLeft();
+    }
+    this->halt();
     turnLeftEveryMillisecTimer = millis();
   }
 }
@@ -58,6 +83,17 @@ void motors::turnLeftEveryMillisec(int milliSecond){
 void motors::turnRight(){
   lp->forward();
   rp->backward();
+}
+
+void motors::turnRightEveryMillisec(int milliSecond){
+  if(millis() - turnRightEveryMillisecTimer> milliSecond)
+  {
+    for (int i = 0; i < 1000; i++){
+      this->turnRight();
+    }
+    this->halt();
+    turnRightEveryMillisecTimer = millis();
+  }
 }
 
 void motors::goRight(){
@@ -87,4 +123,14 @@ void motors::turnLeftSelMillisec(int millisec){
     rp->forward();
   }
   wheel->halt();
+}
+
+void motors::halt(){
+  lp->halt();
+  rp->halt();
+}
+
+void motors::haltQuick(){
+  lp->haltQuick();
+  rp->haltQuick();
 }
