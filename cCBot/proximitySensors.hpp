@@ -8,8 +8,10 @@ class proximitySensors{
     proximitySensor *lp;
     proximitySensor *cp;
     const double OBJSIZE = 10.0; // cm diameter
+    unsigned long long reloadEveryMillisecTimer = 0;
   public:
     void reload();
+    void reloadEveryMillisec(int millisec);
     proximitySensors(int rPinInput,
                      int cPinInput,
                      int lPinInput);

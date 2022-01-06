@@ -16,8 +16,15 @@ void proximitySensors::reload(){
   cp->reload();
 }
 
+void proximitySensors::reloadEveryMillisec(int milliSecond){
+  if(millis() - reloadEveryMillisecTimer > milliSecond)
+  {
+    this->reload();
+    reloadEveryMillisecTimer = millis();
+  }
+}
+
 bool proximitySensors::isObjDetected(){
-  this->reload();
   if (abs(lp->get() - rp->get()) < OBJSIZE && abs(lp->get() - cp->get()) < OBJSIZE && abs(cp->get() - rp->get()) < OBJSIZE && lp->get() < 100 && cp->get() < 100 && rp ->get() < 100){
     return true;
   }
@@ -25,11 +32,11 @@ bool proximitySensors::isObjDetected(){
 }
 
 bool proximitySensors::isAimLeft(){
-  return (lp->get() - rp->get() > 120.0);
+  return (lp->get() - rp->get() > 100.0);
 }
 
 bool proximitySensors::isAimRight(){
-  return (rp->get() - lp->get() > 120.0);
+  return (rp->get() - lp->get() > 100.0);
 }
 
 

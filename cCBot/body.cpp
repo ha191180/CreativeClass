@@ -101,10 +101,12 @@ bool body::isObjDisappearedRecheck(){
 void body::pushObj(){
   bool isObjOnField= true;
   while(!isObjDetected()){
+    proxSens->reload();
     wheel->turnLeftEveryMillisec(50);
   }
 
   while(isObjOnField){
+    proxSens->reloadEveryMillisec(100);
     if (isObjDetected()){
       if (isObjDisappeared()){
         isObjOnField = false;
