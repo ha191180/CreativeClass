@@ -119,7 +119,7 @@ void body::pushObj(){
       }
     }
     else{
-      if (proxSens->isAimLeft()) 
+      if (proxSens->isAimLeft())
       {
         // Serial.println("[*] go right");
         wheel->turnRightEveryMillisec(50);
@@ -151,9 +151,10 @@ void body::sumo(){
 }
 
 void body::swmode(){
-  
+
   // PHASE1 /////////////////////////////////////////////////////////////////////////// touch the line
-  char senstmp = 1;
+  ltSens->reload();
+  senstmp = ltSens->get();
   while (senstmp != 0b1111){
     ltSens->reload();
     senstmp = ltSens->get(); //senstmp = 0b0000 (ll) (lc) (rc) (rr) ex. 0b00001100
@@ -162,13 +163,23 @@ void body::swmode(){
         wheel->moveForwardEveryMillisec(100);
         break;
       case 1: // 0001
-        wheel->turnRight();
+        while (senstmp != 0b1111) {
+          ltSens->reload();
+          senstmp = ltSens->get();
+          wheel->turnRightEveryMillisec(100);
+        }
+        wheel->halt();
         break;
       case 2: // 0010
         // Exception
         break;
       case 3: // 0011
-        // Exception
+        while (senstmp != 0b1111) {
+          ltSens->reload();
+          senstmp = ltSens->get();
+          wheel->turnRightEveryMillisec(50);
+        }
+        wheel->halt();
         break;
       case 4: // 0100
         // Exception
@@ -180,29 +191,50 @@ void body::swmode(){
         // Exception
         break;
       case 7: // 0111
-        wheel->turnRight();
+        while (senstmp != 0b1111) {
+          ltSens->reload();
+          senstmp = ltSens->get();
+          wheel->turnRightEveryMillisec(20);
+        }
+        wheel->halt();
         break;
       case 8: // 1000
-        wheel->turnLeft();
+        while (senstmp != 0b1111) {
+          ltSens->reload();
+          senstmp = ltSens->get();
+          wheel->turnLeftEveryMillisec(100);
+        }
         break;
       case 9: // 1001
-        wheel->moveBackwardForMillisec(500);
-        wheel->turnRight();
+        wheel->moveBackwardForSec(2);
+        wheel->turnLeftSelMillisec();
         break;
       case 10: // 1010
         // Exception
         break;
       case 11: // 1011
-        // Exception
+        wheel->moveBackwardForSec(3);
+        wheel->turnLeftSelMillisec();
         break;
       case 12: // 1100
-        wheel->turnLeft(); 
+        while (senstmp != 0b1111) {
+          ltSens->reload();
+          senstmp = ltSens->get();
+          wheel->turnLeftEveryMillisec(50);
+        }
+        wheel->halt();
         break;
       case 13: // 1101
-        // Exception
+        wheel->moveBackwardForSec(3);
+        wheel->turnLeftSelMillisec();
         break;
       case 14: // 1110
-        wheel->turnLeft();
+        while (senstmp != 0b1111) {
+          ltSens->reload();
+          senstmp = ltSens->get();
+          wheel->turnLeftEveryMillisec(20);
+        }
+        wheel->halt();
         break;
       case 15: // 1111
         // Finish
@@ -210,38 +242,51 @@ void body::swmode(){
     }
   }
 
-  wheel->goRight90();
+  wheel->halt();
+  wheel->goLeft90();
 
-  // PHASE2 /////////////////////////////////////////////////////////////////////////// goto the edge
-  while (senstmp != 0b1111){
+  // PHASE2 /////////////////////////////////////////////////////////////////////////// goto the course
+  ltSens->reload();
+  senstmp = ltSens->get();
+  while (senstmp != 0b1001) {
     ltSens->reload();
-    senstmp = ltSens->get(); 
-    switch (senstmp) {
-      case 0: // 0000
-        wheel->goLeft();
-        break;
-      case 8: // 1000
-        wheel->goRight();
-        break;
-      case 9: // 1001
-        wheel->turnRight();
-        break;
-      case 10: // 1010
-        // Exception
-        break;
-      case 11: // 1011
-        // Exception
-        break;
-      case 14: // 1110
-        wheel->turnRight();
-        break;
-      case 15: // 1111
-        // Finish
-        break;
+    senstmp = ltSens->get();
+    while (senstmp = 0b0000 || senstmp = 0b1000) {
+      wheel->goRight();
+      ltSens->reload();
+      senstmp = ltSens->get();
     }
+    wheel->halt();
+
+    while (senstmp = 0b0001) {
+      wheel->goLeft();
+      ltSens->reload();
+      senstmp = ltSens->get();
+    }
+    wheel->halt();
+
+    wheel->turnLeftSelMillisec(millisec);
+
+    tSens->reload();
+    senstmp = ltSens->get();
+
+    if (senstmp = 0b1111) {
+      wheel->goLeft90();
+      continue
+    }
+    else{
+      while (senstmp != 0b0100 || senstmp != 0b0110 ) {
+        wheel->turnLeft();
+        tSens->reload();
+        senstmp = ltSens->get();
+      }
+      wheel->halt();
+      break
+    }
+
   }
 
-  
+
 }
 
 void body::hilldown() {
@@ -263,7 +308,7 @@ void body::hilldown() {
 
         break;
       case 4: // 0100
-        wheel->goLeft();     
+        wheel->goLeft();
         break;
       case 5: // 0101
 
@@ -321,7 +366,7 @@ void body::lineTrace() {
         wheel->moveForward();
         break;
       case 4: // 0100
-      
+
         break;
       case 5: // 0101
 

@@ -105,8 +105,24 @@ void motors::goLeft(){
 }
 
 void motors::goRight90(){
-  // pass
-  Serial.print("Function motors.cpp/goRight90 is not filled¥n");
+
+}
+
+// whrite goLeft90function and turnLeftSelMillisecfunction
+void motors::goLeft90(){
+  while (millisec) {
+    lp->backward();
+    rp->forward();
+  }
+  wheel->halt();
+}
+
+void motors::turnLeftSelMillisec(int millisec){
+  while (millisec) {
+    lp->backward();
+    rp->forward();
+  }
+  wheel->halt();
 }
 
 void motors::halt(){
