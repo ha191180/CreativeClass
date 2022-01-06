@@ -124,12 +124,12 @@ void body::pushObj(){
         // Serial.println("[*] go right");
         wheel->turnRightEveryMillisec(50);
       }
-      else if (proxSens->isAimRight()) 
+      else if (proxSens->isAimRight())
       {
         // Serial.println("[*]go left");
         wheel->turnLeftEveryMillisec(50); // Aim reset.
       }
-      else 
+      else
       {
         wheel->turnLeft();
       }
@@ -251,7 +251,7 @@ void body::swmode(){
   while (senstmp != 0b1001) {
     ltSens->reload();
     senstmp = ltSens->get();
-    while (senstmp = 0b0000 || senstmp = 0b1000) {
+    while (senstmp == 0b0000 || senstmp == 0b1000) {
       wheel->goRight();
       ltSens->reload();
       senstmp = ltSens->get();
