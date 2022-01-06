@@ -137,12 +137,12 @@ int body::pushObj(){
         // Serial.println("[*] go right");
         wheel->turnRightEveryMillisec(50);
       }
-      else if (proxSens->isAimRight()) 
+      else if (proxSens->isAimRight())
       {
         // Serial.println("[*]go left");
         wheel->turnLeftEveryMillisec(50); // Aim reset.
       }
-      else 
+      else
       {
         wheel->moveForwardEveryMillisec(100);
       }
