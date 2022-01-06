@@ -33,6 +33,8 @@ class motors{
     void goRight90();
     void halt();
     void haltQuick();
+    void goLeft90();
+    void turnLeftSelMillisec(int millisec);
 };
 
 

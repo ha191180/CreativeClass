@@ -110,11 +110,12 @@ void motors::goRight90(){
 
 // whrite goLeft90function and turnLeftSelMillisecfunction
 void motors::goLeft90(){
+  int millisec = 0;
   while (millisec) {
     lp->backward();
     rp->forward();
   }
-  wheel->halt();
+  halt();
 }
 
 void motors::turnLeftSelMillisec(int millisec){
@@ -122,7 +123,7 @@ void motors::turnLeftSelMillisec(int millisec){
     lp->backward();
     rp->forward();
   }
-  wheel->halt();
+  halt();
 }
 
 void motors::halt(){

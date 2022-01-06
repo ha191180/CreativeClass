@@ -154,7 +154,7 @@ void body::swmode(){
 
   // PHASE1 /////////////////////////////////////////////////////////////////////////// touch the line
   ltSens->reload();
-  senstmp = ltSens->get();
+  byte senstmp = ltSens->get();
   while (senstmp != 0b1111){
     ltSens->reload();
     senstmp = ltSens->get(); //senstmp = 0b0000 (ll) (lc) (rc) (rr) ex. 0b00001100
@@ -206,15 +206,15 @@ void body::swmode(){
         }
         break;
       case 9: // 1001
-        wheel->moveBackwardForSec(2);
-        wheel->turnLeftSelMillisec();
+        wheel->moveBackwardForMillisec(500);
+        wheel->turnLeftSelMillisec(100);
         break;
       case 10: // 1010
         // Exception
         break;
       case 11: // 1011
-        wheel->moveBackwardForSec(3);
-        wheel->turnLeftSelMillisec();
+        wheel->moveBackwardForMillisec(500);
+        wheel->turnLeftSelMillisec(100);
         break;
       case 12: // 1100
         while (senstmp != 0b1111) {
@@ -225,8 +225,8 @@ void body::swmode(){
         wheel->halt();
         break;
       case 13: // 1101
-        wheel->moveBackwardForSec(3);
-        wheel->turnLeftSelMillisec();
+        wheel->moveBackwardForMillisec(500);
+        wheel->turnLeftSelMillisec(100);
         break;
       case 14: // 1110
         while (senstmp != 0b1111) {
@@ -251,7 +251,7 @@ void body::swmode(){
   while (senstmp != 0b1001) {
     ltSens->reload();
     senstmp = ltSens->get();
-    while (senstmp = 0b0000 || senstmp = 0b1000) {
+    while (senstmp == 0b0000 || senstmp == 0b1000) {
       wheel->goRight();
       ltSens->reload();
       senstmp = ltSens->get();
@@ -265,23 +265,23 @@ void body::swmode(){
     }
     wheel->halt();
 
-    wheel->turnLeftSelMillisec(millisec);
+    wheel->turnLeftSelMillisec(100);
 
-    tSens->reload();
+    ltSens->reload();
     senstmp = ltSens->get();
 
     if (senstmp = 0b1111) {
       wheel->goLeft90();
-      continue
+      continue;
     }
     else{
       while (senstmp != 0b0100 || senstmp != 0b0110 ) {
         wheel->turnLeft();
-        tSens->reload();
+        ltSens->reload();
         senstmp = ltSens->get();
       }
       wheel->halt();
-      break
+      break;
     }
 
   }
