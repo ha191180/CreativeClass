@@ -9,17 +9,31 @@ enum modes {
 
 body robot;
 
+void Debug() {
+  robot.debug();
+}
+
+void Test() {
+  robot.test();
+}
+
+/////////////////////////////////////////
+
 void Main() {
-	enum modes runMode = mSumo;
+  enum modes runMode = mSumo;
   robot.sumo();
   
 }
 
 void setup(){
   robot.setup();
-  Serial.begin(9600);
 }
 
 void loop(){
+  //Test();
   Main();
+  //Debug();
 }
+
+
+////////////////////////////////////////

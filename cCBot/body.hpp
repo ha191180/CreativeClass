@@ -14,6 +14,7 @@ class body {
 		void swmode(); // switch modes.
 		void hilldown(); // down the hill.
 		void lineTrace(); // do line trace.
+    void test();
 
 
 	private:
@@ -54,8 +55,8 @@ class body {
 		// functinos for sumo
 		bool isObjDetected(); // return boolean value. true: a object is detected, false: else.
 		bool isObjDisappeared(); //return boolean value. true: a object is dropped from the field.
+		bool isObjDisappearedRecheck(); //return boolean value. true: a object is dropped from the field.
 		void pushObj();
-		void searchObj();
 
 		// debug
 		void debugOut();

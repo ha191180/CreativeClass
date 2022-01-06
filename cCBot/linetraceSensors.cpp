@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "linetraceSensors.hpp"
+#include "./linetraceSensors.hpp"
 
 linetraceSensors::linetraceSensors(int rrPinInput,
 																	 int rcPinInput, 
@@ -16,9 +16,9 @@ void linetraceSensors::reload(){
   lcp->reload();
   rcp->reload();
   rrp->reload();
-	val =  (llp->get() << 3) + (lcp->get() << 2) + (rcp->get() << 1) + (rrp->get() << 0);
+	val =  ((llp->get() << 3) + (lcp->get() << 2) + (rcp->get() << 1) + (rrp->get() << 0));
 }
 
-char linetraceSensors::get(){
+byte linetraceSensors::get(){
   return val;
 }

@@ -5,6 +5,19 @@ void body::setup() {
   this->wheel = new motors(lMotorRevPin, lMotorPwmPin, rMotorRevPin, rMotorPwmPin);
   this->ltSens = new linetraceSensors(rrTraceSensorPin, rcTraceSensorPin, lcTraceSensorPin, llTraceSensorPin);
   this->proxSens = new proximitySensors(rProxSensorPin, cProxSensorPin, lProxSensorPin);
+  wheel->halt();
+}
+
+void body::test(){
+  int total = 0;
+  for (int c = 0; c < 100; c++){
+    for (int i = 0; i < 4; i++){
+      ltSens->reload();
+      int b = (1 << i);
+      total += bool(ltSens->get() bitand b);
+    }
+  }
+  Serial.println(total);
 }
 
 
@@ -48,79 +61,90 @@ void body::debugOut(){
 }
 
 bool body::isObjDetected(){ // return boolean value. true: a object is detected, false: else.
-  return proxSens->isObjDetected();
+  return proxSens->isObjDetected();  // need reload time every millisec
 }
 
-/*
+
 bool body::isObjDisappeared(){ // return boolean value. true: a object is dropped.
-  double totalDistance = 0;
+  double totalDistance = 0.0;
+  delay(100);
+  proxSens->reload();
   totalDistance += proxSens->getLeftValue() - proxSens->getLeftPreviousValue();
   totalDistance += proxSens->getCenterValue() - proxSens->getCenterPreviousValue();
   totalDistance += proxSens->getRightValue() - proxSens->getRightPreviousValue();
-  if (totalDistance > 130){
-    Serial.print("[*] Object Disappeared!");
+  if (totalDistance > 260.0){
+    Serial.println("[*] Object Disappeared!");
     return true;
   }
   else return false;
 }
-*/
 
 
 
-bool body::isObjDisappeared(){
-  ltSens->reload();
-  if(ltSens->get()) return true;
+
+bool body::isObjDisappearedRecheck(){
+  int total = 0;
+  for (int c = 0; c < 100; c++){
+    for (int i = 0; i < 4; i++){
+      ltSens->reload();
+      int b = (1 << i);
+      total += bool(ltSens->get() bitand b);
+    }
+  }
+  if (total > 150){
+    return true;
+  }
   else return false;
 }
 
 
-void body::searchObj(){ // spin while object is not in front of robot.
-  while(!isObjDetected()){
-    wheel->turnLeft();
-  }
-  return;
-}
-
 void body::pushObj(){
   bool isObjOnField= true;
   while(!isObjDetected()){
-    Serial.println("[*] init turn");
-    wheel->turnLeft();
+    wheel->turnLeftEveryMillisec(50);
   }
+
   while(isObjOnField){
     if (isObjDetected()){
-      // Serial.println("[*] object detected");
-      // debug();
       if (isObjDisappeared()){
-        // Serial.println("[*] object dropped");
         isObjOnField = false;
       }
-      wheel->moveForwardEveryMillisec(100);
+      else {
+        if (proxSens->getCenterValue() > 30.0){
+          wheel->moveForward();
+        }
+        else {
+          wheel->moveForwardEveryMillisec(80);
+        }
+      }
     }
     else{
       if (proxSens->isAimLeft()) 
       {
         // Serial.println("[*] go right");
-        wheel->turnRight();
+        wheel->turnRightEveryMillisec(50);
       }
-      if (proxSens->isAimRight()) 
+      else if (proxSens->isAimRight()) 
       {
         // Serial.println("[*]go left");
-        wheel->turnLeft(); // Aim reset.
+        wheel->turnLeftEveryMillisec(50); // Aim reset.
+      }
+      else 
+      {
+        wheel->turnLeft();
       }
     }
   }
   return;
 }
 
-// pushobj 中のライン検出
 
 void body::sumo(){
   int count = 0;
   while (count != 3)
   {
     pushObj();
-    wheel->moveBackwardForSec(1);
+    wheel->moveBackwardForMillisec(500);
     count++;
   }
   return;
@@ -162,7 +186,7 @@ void body::swmode(){
         wheel->turnLeft();
         break;
       case 9: // 1001
-        wheel->moveBackwardForSec(2);
+        wheel->moveBackwardForMillisec(500);
         wheel->turnRight();
         break;
       case 10: // 1010

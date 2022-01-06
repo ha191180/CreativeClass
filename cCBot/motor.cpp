@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "motor.hpp"
+#include "./motor.hpp"
 
 motor::motor(int revPinInput, int pwmPinInput){
   pinMode(revPinInput, OUTPUT);
@@ -23,6 +23,12 @@ void motor::forward(){
 }
 
 void motor::forward(int inputValue){
+  if (rotateDirection != 1){
+    for (int i = 0; i < 15000; i++){
+      forward();
+    }
+    rotateDirection = 1;
+  }
   digitalWrite(_revPin, LOW);
   analogWrite(_pwmPin, int(inputValue*bias));
 }
@@ -33,9 +39,36 @@ void motor::backward(){
 }
 
 void motor::backward(int inputValue){
+  if (rotateDirection != -1){
+    for (int i = 0; i < 15000; i++){
+      backward();
+    }
+    rotateDirection = -1;
+  }
   digitalWrite(_revPin, HIGH);
   analogWrite(_pwmPin, int(inputValue*bias));
 }
+
+void motor::haltQuick(){
+  rotateDirection = 0;
+  if (rotateDirection = 1){
+    for(int i = 0; i<5000; i++){
+      backward();
+    }
+  }
+  else if (rotateDirection = -1){
+    for(int i = 0; i<5000; i++){
+      forward();
+    }
+  }
+  analogWrite(_pwmPin, 0);
+}
+
+void motor::halt(){
+  rotateDirection = 0;
+  analogWrite(_pwmPin, 0);
+}
+
 
 void motor::setBias(double inputBias){
   bias = inputBias;

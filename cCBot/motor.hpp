@@ -7,6 +7,7 @@ class motor{
     int _pwmPin;
     const int DEFAULTVALUE = 255; // 0 -255
     double bias = 1;
+    int rotateDirection = 0;
   public:
     void forward();
     void forward(int inputValue);
@@ -14,6 +15,8 @@ class motor{
     void backward(int inputValue);
     motor(int revPinInput, int pwmPinInput);
     void setBias(double inputBias);
+    void halt();
+    void haltQuick();
 };
 
 #endif // !MOTOR_H_INCLUDE

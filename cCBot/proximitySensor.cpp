@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "proximitySensor.hpp"
+#include "./proximitySensor.hpp"
 
 
 proximitySensor::proximitySensor(int pin){
@@ -13,7 +13,7 @@ void proximitySensor::reload(){
   for (byte i = 0; i < 255; i++){
     sum += analogRead(_pin);
   }
-  val = 21000.0*pow(sum/255, -1.252);
+  val = 21000.0*pow(sum/255.0, -1.252);
   //if (val > double(th)) val = th;
 }
 

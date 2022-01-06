@@ -1,6 +1,6 @@
 #ifndef PROXIMITYSENSORS_H_INCLUDE
 #define PROXIMITYSENSORS_H_INCLUDE
-#include "proximitySensor.hpp"
+#include "./proximitySensor.hpp"
 
 class proximitySensors{
   private:

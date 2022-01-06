@@ -1,14 +1,16 @@
 #ifndef MOTORS_H_INCLUDE
 #define MOTORS_H_INCLUDE
-#include "motor.hpp"
+#include "./motor.hpp"
 
 class motors{
   private:
     motor *lp;
     motor *rp;
-    unsigned long long moveBackwardForSecTimer = 0;
+    unsigned long long moveBackwardForMillisecTimer = 0;
+    unsigned long long moveBackwardEveryMillisecTimer = 0;
     unsigned long long moveForwardEveryMillisecTimer = 0;
     unsigned long long turnLeftEveryMillisecTimer = 0;
+    unsigned long long turnRightEveryMillisecTimer = 0;
     
   public:
     motors(int lRevPinInput,
@@ -17,15 +19,21 @@ class motors{
            int rPwmPinInput);
     void moveForward();
     void moveForward(int inputValue);
-    void moveForwardEveryMillisec(int second);
+    void moveForwardEveryMillisec(int millisec);
     void moveBackward();
-    void moveBackwardForSec(int second);
+    void moveBackwardForMillisec(int millisec);
+    void moveBackwardEveryMillisec(int millisec);
     void turnRight();
+    void turnRightEveryMillisec(int millisec);
     void turnLeft();
-    void turnLeftEveryMillisec(int second);
+    void turnLeft(int inputValue);
+    void turnLeftEveryMillisec(int millisec);
     void goRight();
     void goLeft();
     void goRight90();
+    void halt();
+    void haltQuick();
 };
+
 
 #endif // !MOTORS_H_INCLUDE
