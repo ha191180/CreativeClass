@@ -15,6 +15,7 @@ void Debug() {
 
 void Test() {
   robot.test();
+  robot.haltForever();
 }
 
 /////////////////////////////////////////
@@ -27,6 +28,7 @@ void Main() {
 
 void setup(){
   robot.setup();
+  Serial.begin(9600);
 }
 
 void loop(){

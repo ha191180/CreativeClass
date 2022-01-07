@@ -15,6 +15,7 @@ class body {
 		void hilldown(); // down the hill.
 		void lineTrace(); // do line trace.
     void test();
+		void haltForever();
 
 
 	private:
@@ -61,5 +62,6 @@ class body {
 		// debug
 		void debugOut();
 };
+
 
 #endif // !BODY_H_INCLUDE

@@ -6,18 +6,27 @@ void body::setup() {
   this->ltSens = new linetraceSensors(rrTraceSensorPin, rcTraceSensorPin, lcTraceSensorPin, llTraceSensorPin);
   this->proxSens = new proximitySensors(rProxSensorPin, cProxSensorPin, lProxSensorPin);
   wheel->halt();
+  proxSens->reload();
+  ltSens->reload();
 }
 
 void body::test(){
-  int total = 0;
-  for (int c = 0; c < 100; c++){
-    for (int i = 0; i < 4; i++){
-      ltSens->reload();
-      int b = (1 << i);
-      total += bool(ltSens->get() bitand b);
+ // PHASE0 ////////////////////////////////////////////// searching 
+  while(!isObjDetected()){
+    proxSens->reload();
+    wheel->curveRightEveryMillisec(100, 4);
+    if (isEdge()){
+      wheel->moveBackwardForMillisec(300);
+      delay(100);
+      wheel->turnRightEveryMillisec(1000,6);
     }
   }
-  Serial.println(total);
+  wheel->haltQuick();
+}
+
+void body::haltForever(){
+  wheel->halt();
+  while(true);
 }
 
 
@@ -45,6 +54,8 @@ void body::debugOut(){
   if (ltSens->get() bitand 0b0100) Serial.print("BLACK "); else Serial.print("WHITE ");
   if (ltSens->get() bitand 0b0010) Serial.print("BLACK "); else Serial.print("WHITE ");
   if (ltSens->get() bitand 0b0001) Serial.print("BLACK "); else Serial.print("WHITE ");
+  Serial.print("isEdge: ");
+  Serial.println(isEdge());
   Serial.print("\n");
   Serial.print("\n");
   Serial.print("[Proximity Sensors]\n");
@@ -99,10 +110,7 @@ bool body::isEdge(){
 
 
 int body::pushObj(){
-  while(!isObjDetected()){
-    proxSens->reload();
-    wheel->turnLeftEveryMillisec(50);
-  }
+  
 
   /*
   while(isObjOnField){
@@ -150,6 +158,46 @@ int body::pushObj(){
   }
   */
 
+
+ // PHASE0 ////////////////////////////////////////////// searching 
+  unsigned long phase0Timer = millis();
+  int searchTypeSelector = 0;
+
+  while(!isObjDetected()){
+
+    if (searchTypeSelector == 0){
+      proxSens->reload();
+      wheel->turnRightEveryMillisec(1,3);
+      if (isEdge()){
+        wheel->moveBackwardForMillisec(300);
+        wheel->haltQuick();
+        delay(100);
+        wheel->turnRightEveryMillisec(100, 8);
+      }
+      if (millis() - phase0Timer > 1000 * 10){
+        phase0Timer = millis();
+        searchTypeSelector = 1;
+      }
+    }
+
+    else if (searchTypeSelector == 1){
+      proxSens->reload();
+      wheel->curveRightEveryMillisec(1, 4);
+      if (isEdge()){
+        wheel->moveBackwardForMillisec(300);
+        wheel->haltQuick();
+        delay(100);
+        wheel->turnRightEveryMillisec(100,6);
+        phase0Timer = millis();
+      }
+      if (millis() - phase0Timer > 1000 * 10){
+        phase0Timer = millis();
+        searchTypeSelector = 0;
+      }
+    }
+
+  }
+  wheel->haltQuick();
  // PHASE1 ////////////////////////////////////////////// aproaching
   bool phase1 = true;
   while(phase1){
@@ -157,11 +205,7 @@ int body::pushObj(){
 
     if (isObjDetected()){
       if (proxSens->getCenterValue() > 20.0){
-        for (int i = 0; i < 3000; i++)
-        {
-          wheel->moveForward();
-        }
-        wheel->halt();
+        wheel->moveForwardEveryMillisec(100,3);
       }
       else{
         phase1 = false;
@@ -195,7 +239,7 @@ int body::pushObj(){
         break;
       }
       else {
-        wheel->moveForwardEveryMillisec(100);
+        wheel->moveForwardEveryMillisec(100,2);
       }
     }
     else{
@@ -214,16 +258,35 @@ int body::pushObj(){
     }
   }
   // PHASE3 /////////////////////////////////////////////////// pushing
+  unsigned long phase3Timer = millis();
   bool phase3 = true;
   while (phase3){
     if (isEdge()){
-      phase3 = false;
-      wheel->moveBackwardForMillisec(100);
-      delay(1000);
-      return 1;
+      wheel->moveBackwardForMillisec(200);
+      delay(500);
+      proxSens->reload();
+      if (!isObjDetected()){
+        phase3 = false;
+        wheel->turnLeftEveryMillisec(100,6);
+        delay(500);
+        return 1;
+      }
     }
     else {
       wheel->moveForwardEveryMillisec(100);
+    }
+    if (millis() - phase3Timer > 1000 * 10){
+      if (!isObjDetected()){
+        phase3 = false;
+        wheel->moveBackwardForMillisec(200);
+        delay(500);
+        wheel->turnLeftEveryMillisec(100,8);
+        delay(500);
+        return 1;
+      }
+      wheel->moveBackwardForMillisec(200);
+      wheel->turnRightEveryMillisec(100,6);
+      return 0;
     }
   }
 }
@@ -231,7 +294,7 @@ int body::pushObj(){
 
 void body::sumo(){
   int count = 0;
-  while (count <= 3)
+  while (count < 3)
   {
     count += pushObj();
   }
