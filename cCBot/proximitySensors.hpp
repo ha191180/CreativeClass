@@ -25,6 +25,7 @@ class proximitySensors{
     double getLeftPreviousValue();
     double getCenterPreviousValue();
     double getRightPreviousValue();
+    double getDiffDistance();
 };
 
 

@@ -71,3 +71,11 @@ double proximitySensors::getCenterPreviousValue(){
 double proximitySensors::getRightPreviousValue(){
   return (rp->getPrevious());
 }
+
+double proximitySensors::getDiffDistance(){
+  double totalDistance = 0;
+  totalDistance += this->getLeftValue() - this->getLeftPreviousValue();
+  totalDistance += this->getCenterValue() - this->getCenterPreviousValue();
+  totalDistance += this->getRightValue() - this->getRightPreviousValue();
+  return totalDistance;
+}

@@ -7,7 +7,7 @@ motors::motors(int lRevPinInput,
                int rPwmPinInput){
   lp = new motor(lRevPinInput, lPwmPinInput);
   rp = new motor(rRevPinInput, rPwmPinInput);
-  rp->setBias(0.80);
+  rp->setBias(0.85);
 }
 
 void motors::moveForward(){
@@ -26,7 +26,7 @@ void motors::moveForwardEveryMillisec(int milliSecond){
     for (int i = 0; i < 1000; i++){
       moveForward();
     }
-    halt();
+    halt(false);
     moveForwardEveryMillisecTimer = millis();
   }
 }
@@ -37,7 +37,7 @@ void motors::moveForwardEveryMillisec(int milliSecond, int powerLevel){
     for (int i = 0; i < powerLevel * 1000; i++){
       moveForward();
     }
-    halt();
+    halt(false);
     moveForwardEveryMillisecTimer = millis();
   }
 }
@@ -63,7 +63,7 @@ void motors::moveBackwardEveryMillisec(int milliSecond){
     for (int i = 0; i < 1000; i++){
       moveBackward();
     }
-    halt();
+    halt(false);
     moveBackwardEveryMillisecTimer = millis();
   }
 }
@@ -75,7 +75,7 @@ void motors::moveBackwardEveryMillisec(int milliSecond, int powerLevel){
     for (int i = 0; i < powerLevel * 1000; i++){
       moveBackward();
     }
-    halt();
+    halt(false);
     moveBackwardEveryMillisecTimer = millis();
   }
 }
@@ -98,7 +98,7 @@ void motors::turnLeftEveryMillisec(int milliSecond){
     for (int i = 0; i < 500; i++){
       this->turnLeft();
     }
-    this->halt();
+    this->halt(false);
     turnLeftEveryMillisecTimer = millis();
   }
 }
@@ -109,7 +109,7 @@ void motors::turnLeftEveryMillisec(int milliSecond, int powerLevel){
     for (int i = 0; i < powerLevel * 500; i++){
       this->turnLeft();
     }
-    this->halt();
+    this->halt(false);
     turnLeftEveryMillisecTimer = millis();
   }
 }
@@ -120,13 +120,18 @@ void motors::turnRight(){
   rp->backward();
 }
 
+void motors::turnRight(int inputValue){
+  lp->forward(inputValue);
+  rp->backward(inputValue);
+}
+
 void motors::turnRightEveryMillisec(int milliSecond){
   if(millis() - turnRightEveryMillisecTimer> milliSecond)
   {
     for (int i = 0; i < 500; i++){
       this->turnRight();
     }
-    this->halt();
+    this->halt(false);
     turnRightEveryMillisecTimer = millis();
   }
 }
@@ -137,9 +142,16 @@ void motors::turnRightEveryMillisec(int milliSecond, int powerLevel){
     for (int i = 0; i < powerLevel * 500; i++){
       this->turnRight();
     }
-    this->halt();
+    this->halt(false);
     turnRightEveryMillisecTimer = millis();
   }
+}
+
+void motors::turnRight180(){
+  for (int i = 0; i < 28000; i++){
+    this->turnRight();
+  }
+  this->haltQuick();
 }
 
 
@@ -178,10 +190,10 @@ void motors::curveRightEveryMillisec(int millisec){
   {
     for (int i = 0; i < 500; i++){
       if (i < 500 / 2) rp->forward();
-      else rp -> halt();
+      else rp -> halt(false);
       lp -> forward();
     }
-    this->halt();
+    this->halt(false);
     curveRightEveryMillisecTimer = millis();
   }
 }
@@ -191,10 +203,10 @@ void motors::curveRightEveryMillisec(int millisec, int powerLevel){
   {
     for (int i = 0; i < powerLevel * 500; i++){
       if (i < powerLevel * 500 / 2) rp->forward();
-      else rp->halt();
+      else rp->halt(false);
       lp -> forward();
     }
-    this->halt();
+    this->halt(false);
     curveRightEveryMillisecTimer = millis();
   }
 }
@@ -205,10 +217,10 @@ void motors::curveRightEveryMillisec(int millisec, int powerLevel, int curveRate
     for (int i = 0; i < powerLevel * 500; i++){
       if (curveRate > 100) curveRate = 100;
       if (i < powerLevel * 500 - (powerLevel * curveRate*5) ) rp->forward();
-      else rp->halt();
+      else rp->halt(false);
       lp -> forward();
     }
-    this->halt();
+    this->halt(false);
     curveRightEveryMillisecTimer = millis();
   }
 }
@@ -216,6 +228,11 @@ void motors::curveRightEveryMillisec(int millisec, int powerLevel, int curveRate
 void motors::halt(){
   lp->halt();
   rp->halt();
+}
+
+void motors::halt(bool RotateDirectionRecording){
+  lp->halt(RotateDirectionRecording);
+  rp->halt(RotateDirectionRecording);
 }
 
 void motors::haltQuick(){
@@ -227,5 +244,5 @@ void motors::punch(){
   for (int i = 0; i < 2000; i++){
     this->moveForward();
   }
-  this->halt();
+  this->haltQuick();
 }

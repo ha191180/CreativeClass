@@ -27,8 +27,10 @@ class motors{
     void moveBackwardEveryMillisec(int millisec);
     void moveBackwardEveryMillisec(int millisec, int powerLevel); // powerLevel: 1-3 are recommended
     void turnRight();
+    void turnRight(int inputValue);
     void turnRightEveryMillisec(int millisec);
     void turnRightEveryMillisec(int millisec, int powerLevel); // powerLevel: 1-3 are recommended
+    void turnRight180();
     void turnLeft();
     void turnLeft(int inputValue);
     void turnLeftEveryMillisec(int millisec);
@@ -42,6 +44,7 @@ class motors{
     void curveRightEveryMillisec(int millisec, int powerLevel);
     void curveRightEveryMillisec(int millisec, int powerLevel, int curveRate);
     void halt();
+    void halt(bool RotateDirectionRecording);
     void haltQuick();
     void punch();
 };
