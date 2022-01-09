@@ -16,13 +16,12 @@ void proximitySensors::reload(){
   cp->reload();
 }
 
-void proximitySensors::reloadEveryMillisec(int milliSecond){
-  if(millis() - reloadEveryMillisecTimer > milliSecond)
-  {
-    this->reload();
-    reloadEveryMillisecTimer = millis();
-  }
+void proximitySensors::reload(bool resetFlag){
+  rp->reload(resetFlag);
+  lp->reload(resetFlag);
+  cp->reload(resetFlag);
 }
+
 
 bool proximitySensors::isObjDetected(){
   if (abs(lp->get() - rp->get()) < OBJSIZE && abs(lp->get() - cp->get()) < OBJSIZE && abs(cp->get() - rp->get()) < OBJSIZE && lp->get() < 100 && cp->get() < 100 && rp ->get() < 100){

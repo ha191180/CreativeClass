@@ -4,17 +4,40 @@
 
 proximitySensor::proximitySensor(int pin){
 	_pin = pin;
-  val = 0.0;
+  dataQueue = Queue<int>(queueSize);
+  for (int i = 0; i < queueSize; i++)
+  {
+    int tmpRawVoltage = analogRead(_pin);
+    dataQueue.push(tmpRawVoltage);
+    sumVoltage += tmpRawVoltage;
+  }
+  val = 21000.0*pow(((double)sumVoltage / (double)queueSize), -1.252);
 }
 
 void proximitySensor::reload(){ 
   previousVal = val;
-  double sum = 0;
-  for (byte i = 0; i < 255; i++){
-    sum += analogRead(_pin);
+
+  sumVoltage -= dataQueue.pop();
+  int tmpRawVoltage = analogRead(_pin);
+  dataQueue.push(tmpRawVoltage);
+  sumVoltage += tmpRawVoltage;
+
+  val = 21000.0*pow(((double)sumVoltage / (double)queueSize), -1.252);
+}
+
+void proximitySensor::reload(bool resetFlag){
+  if (resetFlag){
+    previousVal = val;
+    for (int i = 0; i < queueSize; i++)
+    {
+      sumVoltage -= dataQueue.pop();
+      int tmpRawVoltage = analogRead(_pin);
+      dataQueue.push(tmpRawVoltage);
+      sumVoltage += tmpRawVoltage;
+    }
+    val = 21000.0*pow(((double)sumVoltage / (double)queueSize), -1.252);
   }
-  val = 21000.0*pow(sum/255.0, -1.252);
-  //if (val > double(th)) val = th;
+  else reload();
 }
 
 double proximitySensor::get(){

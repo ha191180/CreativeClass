@@ -11,7 +11,17 @@ void body::setup() {
 }
 
 void body::test(){
-  wheel->turnRight180();
+  Serial.begin(9600);
+  while (true)
+  {
+    proxSens->reload();
+    Serial.print(proxSens -> getLeftValue());
+    Serial.print("\t");
+    Serial.print(proxSens -> getCenterValue());
+    Serial.print("\t");
+    Serial.println(proxSens -> getRightValue());
+  }
+  
 }
 
 void body::haltForever(){
@@ -69,7 +79,7 @@ bool body::isObjDetected(){ // return boolean value. true: a object is detected,
 bool body::isObjDisappeared(){ // return boolean value. true: a object is dropped.
   double totalDistance = 0.0;
   delay(100);
-  proxSens->reload();
+  proxSens->reload(true);
   totalDistance += proxSens->getLeftValue() - proxSens->getLeftPreviousValue();
   totalDistance += proxSens->getCenterValue() - proxSens->getCenterPreviousValue();
   totalDistance += proxSens->getRightValue() - proxSens->getRightPreviousValue();
@@ -282,7 +292,7 @@ int body::pushObj(){
     if (isEdge()){
       wheel->moveBackwardForMillisec(200);
       delay(1000);
-      proxSens->reload();
+      proxSens->reload(true);
       if (!isObjDetected()){
         phase3 = false;
         wheel->moveBackwardForMillisec(300);
