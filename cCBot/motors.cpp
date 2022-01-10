@@ -7,7 +7,6 @@ motors::motors(int lRevPinInput,
                int rPwmPinInput){
   lp = new motor(lRevPinInput, lPwmPinInput);
   rp = new motor(rRevPinInput, rPwmPinInput);
-  rp->setBias(0.85);
 }
 
 void motors::moveForward(){
@@ -23,7 +22,7 @@ void motors::moveForward(int inputValue){
 void motors::moveForwardEveryMillisec(int milliSecond){
   if(millis() - moveForwardEveryMillisecTimer > milliSecond)
   {
-    for (int i = 0; i < 1000; i++){
+    for (int i = 0; i < 500; i++){
       moveForward();
     }
     halt(false);
@@ -31,10 +30,10 @@ void motors::moveForwardEveryMillisec(int milliSecond){
   }
 }
 
-void motors::moveForwardEveryMillisec(int milliSecond, int powerLevel){
+void motors::moveForwardEveryMillisec(int milliSecond, int moveTime){
   if(millis() - moveForwardEveryMillisecTimer > milliSecond)
   {
-    for (int i = 0; i < powerLevel * 1000; i++){
+    for (int i = 0; i < moveTime * 500; i++){
       moveForward();
     }
     halt(false);
@@ -57,10 +56,20 @@ void motors::moveBackwardForMillisec(int millisec){
   this->halt();
 }
 
+void motors::moveBackwardForMillisec(int millisec, int powerLevel){ // powerLevel must be 0 - 255
+  moveBackwardForMillisecTimer = millis();
+  while (millis() - moveBackwardForMillisecTimer < millisec)
+  {
+    lp->backward(powerLevel);
+    rp->backward(powerLevel);
+  }
+  this->halt();
+}
+
 void motors::moveBackwardEveryMillisec(int milliSecond){
   if(millis() - moveBackwardEveryMillisecTimer > milliSecond)
   {
-    for (int i = 0; i < 1000; i++){
+    for (int i = 0; i < 500; i++){
       moveBackward();
     }
     halt(false);
@@ -69,10 +78,10 @@ void motors::moveBackwardEveryMillisec(int milliSecond){
 }
 
 
-void motors::moveBackwardEveryMillisec(int milliSecond, int powerLevel){
+void motors::moveBackwardEveryMillisec(int milliSecond, int moveTime){
   if(millis() - moveBackwardEveryMillisecTimer > milliSecond)
   {
-    for (int i = 0; i < powerLevel * 1000; i++){
+    for (int i = 0; i < moveTime * 500; i++){
       moveBackward();
     }
     halt(false);
@@ -95,7 +104,7 @@ void motors::turnLeft(int inputValue){
 void motors::turnLeftEveryMillisec(int milliSecond){
   if(millis() - turnLeftEveryMillisecTimer > milliSecond)
   {
-    for (int i = 0; i < 500; i++){
+    for (int i = 0; i < 250; i++){
       this->turnLeft();
     }
     this->halt(false);
@@ -103,10 +112,10 @@ void motors::turnLeftEveryMillisec(int milliSecond){
   }
 }
 
-void motors::turnLeftEveryMillisec(int milliSecond, int powerLevel){
+void motors::turnLeftEveryMillisec(int milliSecond, int moveTime){
   if(millis() - turnLeftEveryMillisecTimer > milliSecond)
   {
-    for (int i = 0; i < powerLevel * 500; i++){
+    for (int i = 0; i < moveTime * 250; i++){
       this->turnLeft();
     }
     this->halt(false);
@@ -128,7 +137,7 @@ void motors::turnRight(int inputValue){
 void motors::turnRightEveryMillisec(int milliSecond){
   if(millis() - turnRightEveryMillisecTimer> milliSecond)
   {
-    for (int i = 0; i < 500; i++){
+    for (int i = 0; i < 250; i++){
       this->turnRight();
     }
     this->halt(false);
@@ -136,10 +145,10 @@ void motors::turnRightEveryMillisec(int milliSecond){
   }
 }
 
-void motors::turnRightEveryMillisec(int milliSecond, int powerLevel){
+void motors::turnRightEveryMillisec(int milliSecond, int moveTime){
   if(millis() - turnRightEveryMillisecTimer> milliSecond)
   {
-    for (int i = 0; i < powerLevel * 500; i++){
+    for (int i = 0; i < moveTime * 250; i++){
       this->turnRight();
     }
     this->halt(false);
@@ -148,7 +157,7 @@ void motors::turnRightEveryMillisec(int milliSecond, int powerLevel){
 }
 
 void motors::turnRight180(){
-  for (int i = 0; i < 28000; i++){
+  for (int i = 0; i < 10000; i++){
     this->turnRight();
   }
   this->haltQuick();
@@ -185,11 +194,26 @@ void motors::turnLeftSelMillisec(int millisec){
   halt();
 }
 
+void motors::curveRight(){
+  rp -> forward(255/2);
+  lp -> forward(255);
+}
+
+void motors::curveRight(int powerLevel){
+  rp -> forward(powerLevel/2);
+  lp -> forward(powerLevel);
+}
+
+void motors::curveRight(int powerLevel, int curveRate){
+  rp -> forward(powerLevel - (curveRate * powerLevel / 100));
+  lp -> forward(powerLevel);
+}
+
 void motors::curveRightEveryMillisec(int millisec){
   if(millis() - curveRightEveryMillisecTimer > millisec)
   {
-    for (int i = 0; i < 500; i++){
-      if (i < 500 / 2) rp->forward();
+    for (int i = 0; i < 250; i++){
+      if (i < 250 / 2) rp->forward();
       else rp -> halt(false);
       lp -> forward();
     }
@@ -198,11 +222,11 @@ void motors::curveRightEveryMillisec(int millisec){
   }
 }
 
-void motors::curveRightEveryMillisec(int millisec, int powerLevel){
+void motors::curveRightEveryMillisec(int millisec, int moveTime){
   if(millis() - curveRightEveryMillisecTimer > millisec)
   {
-    for (int i = 0; i < powerLevel * 500; i++){
-      if (i < powerLevel * 500 / 2) rp->forward();
+    for (int i = 0; i < moveTime * 250; i++){
+      if (i < moveTime * 250 / 2) rp->forward();
       else rp->halt(false);
       lp -> forward();
     }
@@ -211,12 +235,12 @@ void motors::curveRightEveryMillisec(int millisec, int powerLevel){
   }
 }
 
-void motors::curveRightEveryMillisec(int millisec, int powerLevel, int curveRate){
+void motors::curveRightEveryMillisec(int millisec, int moveTime, int curveRate){
   if(millis() - curveRightEveryMillisecTimer > millisec)
   {
-    for (int i = 0; i < powerLevel * 500; i++){
+    for (int i = 0; i < moveTime * 250; i++){
       if (curveRate > 100) curveRate = 100;
-      if (i < powerLevel * 500 - (powerLevel * curveRate*5) ) rp->forward();
+      if (i < moveTime * 250 - (moveTime * curveRate*5/2) ) rp->forward();
       else rp->halt(false);
       lp -> forward();
     }
@@ -241,8 +265,8 @@ void motors::haltQuick(){
 }
 
 void motors::punch(){
-  for (int i = 0; i < 2000; i++){
+  for (int i = 0; i < 4000; i++){
     this->moveForward();
   }
-  this->haltQuick();
+  this->halt();
 }

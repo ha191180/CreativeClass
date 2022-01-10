@@ -11,7 +11,6 @@ void body::setup() {
 }
 
 void body::test(){
-  wheel->turnRight180();
 }
 
 void body::haltForever(){
@@ -92,7 +91,7 @@ bool body::isEdge(){
       total += bool(ltSens->get() bitand b);
     }
   }
-  if (total > 150){
+  if (total > 100){
     return true;
   }
   else return false;
@@ -100,6 +99,7 @@ bool body::isEdge(){
 
 
 int body::pushObj(){
+  unsigned long pushObjTimer = millis();
   
 
   /*
@@ -158,13 +158,11 @@ int body::pushObj(){
 
     if (searchTypeSelector == 0){
       proxSens->reload();
-      wheel->turnRight(180);
+      wheel->turnRight(70);
       if (isEdge()){
-        wheel->haltQuick();
-        wheel->moveBackwardForMillisec(300);
-        wheel->haltQuick();
+        wheel->moveBackwardForMillisec(300, 100);
+        wheel->halt();
         delay(500);
-        wheel->turnRight180();
       }
       if (millis() - phase0Timer > 1000 * 7){
         phase0Timer = millis();
@@ -176,17 +174,15 @@ int body::pushObj(){
       }
     }
 
-    else if (searchTypeSelector == 1){
+    else if (searchTypeSelector == 1){ // wide area search
       proxSens->reload();
-      wheel->curveRightEveryMillisec(1, 4);
+      wheel->curveRight(80);
       if (isEdge()){
-        wheel->moveBackwardForMillisec(300);
-        wheel->haltQuick();
-        delay(100);
-        wheel->turnRightEveryMillisec(100,10);
+        wheel->moveBackwardForMillisec(300, 100);
+        wheel->halt();
         phase0Timer = millis();
       }
-      if (millis() - phase0Timer > 1000 * 10){
+      if (millis() - phase0Timer > 1000 * 5){
         phase0Timer = millis();
         searchTypeSelector = 0;
       }
@@ -198,7 +194,7 @@ int body::pushObj(){
 
     else if (searchTypeSelector == 3){
       proxSens->reload();
-      wheel->turnLeftEveryMillisec(1,2);
+      wheel->turnLeftEveryMillisec(500,3);
       if (isEdge()){
         phase0Timer = millis();
         searchTypeSelector = 1;
@@ -213,6 +209,8 @@ int body::pushObj(){
         break;
       }
     }
+
+    if (millis() - pushObjTimer > 1000 * 20) return 1;
   }
 
 
@@ -221,9 +219,14 @@ int body::pushObj(){
   while(phase1){
     proxSens->reload();
 
+    if (isEdge()){
+      phase1 = false;
+      return 0;
+    }
+
     if (isObjDetected()){
       if (proxSens->getCenterValue() > 20.0){
-        wheel->moveForwardEveryMillisec(100,4);
+        wheel->moveForwardEveryMillisec(500,3);
       }
       else{
         phase1 = false;
@@ -233,17 +236,19 @@ int body::pushObj(){
     else{
       if (proxSens->isAimLeft())
       {
-        wheel->turnRightEveryMillisec(100);
+        wheel->turnRightEveryMillisec(500);
       }
       else if (proxSens->isAimRight()) 
       {
-        wheel->turnLeftEveryMillisec(100);
+        wheel->turnLeftEveryMillisec(500);
       }
       else 
       {
-        return 0;
+        wheel->moveForwardEveryMillisec(500,1);
       }
     }
+
+    if (millis() - pushObjTimer > 1000 * 20) return 1;
   }
 
   // PHASE2 /////////////////////////////////////////////////// touching
@@ -257,7 +262,7 @@ int body::pushObj(){
         break;
       }
       else {
-        wheel->moveForwardEveryMillisec(100,3);
+        wheel->moveForward(70);
       }
     }
     else{
@@ -274,25 +279,27 @@ int body::pushObj(){
         return 0;
       }
     }
+    if (millis() - pushObjTimer > 1000 * 20) return 1;
   }
   // PHASE3 /////////////////////////////////////////////////// pushing
   unsigned long phase3Timer = millis();
   bool phase3 = true;
   while (phase3){
     if (isEdge()){
-      wheel->moveBackwardForMillisec(200);
+      wheel->moveBackwardForMillisec(400, 100);
       delay(1000);
       proxSens->reload();
       if (!isObjDetected()){
         phase3 = false;
         wheel->moveBackwardForMillisec(300);
-        wheel->turnRight180();
+        wheel->haltQuick();
+        delay(500);
         delay(500);
         return 1;
       }
     }
     else {
-      wheel->moveForwardEveryMillisec(100,2);
+      wheel->moveForwardEveryMillisec(500,2);
     }
     if (millis() - phase3Timer > 1000 * 10){
       delay(1000);
@@ -300,11 +307,10 @@ int body::pushObj(){
         phase3 = false;
         wheel->moveBackwardForMillisec(300);
         delay(500);
-        wheel->turnRight180();
         return 1;
       }
       wheel->moveBackwardForMillisec(200);
-      wheel->turnRightEveryMillisec(100,6);
+      wheel->turnRightEveryMillisec(100,4);
       return 0;
     }
   }
@@ -460,60 +466,24 @@ void body::swmode(){
 }
 
 void body::hilldown() {
-  char senstmp = 1;
-  while (senstmp bitand 0b1000) {
+
+  // PHASE 2 //////////////////////////////////////////// down the hill.
+  wheel->punch();
+  delay(1000);
+  unsigned long hillDownTimer = millis();
+  while (millis() - hillDownTimer < 1000 * 2){
     ltSens->reload();
-    senstmp = ltSens->get();
-    switch (senstmp) {
-      case 0: // 0000
-
-        break;
-      case 1: // 0001
-
-        break;
-      case 2: // 0010
-        wheel->goRight();
-        break;
-      case 3: // 0011
-
-        break;
-      case 4: // 0100
-        wheel->goLeft();
-        break;
-      case 5: // 0101
-
-        break;
-      case 6: // 0110
-
-        break;
-      case 7: // 0111
-
-        break;
-      case 8: // 1000
-
-        break;
-      case 9: // 1001
-
-        break;
-      case 10: // 1010
-
-        break;
-      case 11: // 1011
-
-        break;
-      case 12: // 1100
-
-        break;
-      case 13: // 1101
-
-        break;
-      case 14: // 1110
-
-        break;
-      case 15: // 1111
-
-        break;
+    if (ltSens->get() bitand 0b0100){
+      wheel->turnLeftEveryMillisec(100,1);
     }
+    if (ltSens->get() bitand 0b0010){
+      wheel->turnRightEveryMillisec(100,1);
+    }
+    wheel->moveForwardEveryMillisec(1000,2);
+    
+  }
+  while(millis() - hillDownTimer < 1000 * 3){
+    wheel->moveBackwardEveryMillisec(100);
   }
 }
 

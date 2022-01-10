@@ -21,28 +21,32 @@ class motors{
     void moveForward();
     void moveForward(int inputValue);
     void moveForwardEveryMillisec(int millisec);
-    void moveForwardEveryMillisec(int millisec, int powerLevel); // powerLevel: 1-3 are recommended
+    void moveForwardEveryMillisec(int millisec, int moveTime); // moveTime: 1-3 are recommended
     void moveBackward();
     void moveBackwardForMillisec(int millisec);
+    void moveBackwardForMillisec(int millisec, int powerLevel);
     void moveBackwardEveryMillisec(int millisec);
-    void moveBackwardEveryMillisec(int millisec, int powerLevel); // powerLevel: 1-3 are recommended
+    void moveBackwardEveryMillisec(int millisec, int moveTime); // moveTime: 1-3 are recommended
     void turnRight();
     void turnRight(int inputValue);
     void turnRightEveryMillisec(int millisec);
-    void turnRightEveryMillisec(int millisec, int powerLevel); // powerLevel: 1-3 are recommended
+    void turnRightEveryMillisec(int millisec, int moveTime); // moveTime: 1-3 are recommended
     void turnRight180();
     void turnLeft();
     void turnLeft(int inputValue);
     void turnLeftEveryMillisec(int millisec);
-    void turnLeftEveryMillisec(int millisec, int powerLevel); // powerLevel: 1-3 are recommended
+    void turnLeftEveryMillisec(int millisec, int moveTime); // moveTime: 1-3 are recommended
     void turnLeftSelMillisec(int millisec);
     void goRight();
     void goLeft();
     void goRight90();
     void goLeft90();
+    void curveRight();
+    void curveRight(int powerLevel);
+    void curveRight(int powerLevel, int curveRate);
     void curveRightEveryMillisec(int millisec);
-    void curveRightEveryMillisec(int millisec, int powerLevel);
-    void curveRightEveryMillisec(int millisec, int powerLevel, int curveRate);
+    void curveRightEveryMillisec(int millisec, int moveTime);
+    void curveRightEveryMillisec(int millisec, int moveTIme, int curveRate);
     void halt();
     void halt(bool RotateDirectionRecording);
     void haltQuick();
