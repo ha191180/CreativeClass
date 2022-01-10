@@ -8,7 +8,7 @@ class proximitySensor{
     double val;
     double previousVal;
     int _pin;
-    int queueSize = 1000;
+    int queueSize = 256;
     Queue<int> dataQueue;
     unsigned long sumVoltage = 0;
   public:
