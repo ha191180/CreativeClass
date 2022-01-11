@@ -163,6 +163,13 @@ void motors::turnRight180(){
   this->haltQuick();
 }
 
+void motors::turnLeft180(){
+  for (int i = 0; i < 10000; i++){
+    this->turnLeft();
+  }
+  this->haltQuick();
+}
+
 
 void motors::goRight(){
   lp->forward();
@@ -283,6 +290,61 @@ void motors::curveRightEveryMillisec(int millisec, int moveTime, int curveRate){
     }
     this->halt(false);
     curveRightEveryMillisecTimer = millis();
+  }
+}
+
+void motors::curveLeft(){
+  lp -> forward(255/2);
+  rp -> forward(255);
+}
+
+void motors::curveLeft(int powerLevel){
+  lp -> forward(powerLevel/2);
+  rp -> forward(powerLevel);
+}
+
+void motors::curveLeft(int powerLevel, int curveRate){
+  lp -> forward(powerLevel - (curveRate * powerLevel / 100));
+  rp -> forward(powerLevel);
+}
+
+void motors::curveLeftEveryMillisec(int millisec){
+  if(millis() - curveLeftEveryMillisecTimer > millisec)
+  {
+    for (int i = 0; i < 250; i++){
+      if (i < 250 / 2) lp->forward();
+      else lp -> halt(false);
+      rp -> forward();
+    }
+    this->halt(false);
+    curveLeftEveryMillisecTimer = millis();
+  }
+}
+
+void motors::curveLeftEveryMillisec(int millisec, int moveTime){
+  if(millis() - curveLeftEveryMillisecTimer > millisec)
+  {
+    for (int i = 0; i < moveTime * 250; i++){
+      if (i < moveTime * 250 / 2) lp->forward();
+      else lp->halt(false);
+      rp -> forward();
+    }
+    this->halt(false);
+    curveLeftEveryMillisecTimer = millis();
+  }
+}
+
+void motors::curveLeftEveryMillisec(int millisec, int moveTime, int curveRate){
+  if(millis() - curveLeftEveryMillisecTimer > millisec)
+  {
+    for (int i = 0; i < moveTime * 250; i++){
+      if (curveRate > 100) curveRate = 100;
+      if (i < moveTime * 250 - (moveTime * curveRate*5/2) ) lp->forward();
+      else lp->halt(false);
+      rp -> forward();
+    }
+    this->halt(false);
+    curveLeftEveryMillisecTimer = millis();
   }
 }
 

@@ -14,6 +14,7 @@ class motors{
     unsigned long turnRightEveryMillisecTimer = 0;
     unsigned long goLeftInverseEveryMillisecTimer = 0;
     unsigned long curveRightEveryMillisecTimer = 0;
+    unsigned long curveLeftEveryMillisecTimer = 0;
     
   public:
     motors(int lRevPinInput,
@@ -40,6 +41,7 @@ class motors{
     void turnLeftEveryMillisec(int millisec, int moveTime); // moveTime: 1-3 are recommended
     void turnLeftForMillisec(int millisec);
     void turnLeftForMillisec(int millisec, int powerLevel);
+    void turnLeft180();
     void goRight();
     void goRight(int powerLevel);
     void goLeft();
@@ -54,6 +56,12 @@ class motors{
     void curveRightEveryMillisec(int millisec);
     void curveRightEveryMillisec(int millisec, int moveTime);
     void curveRightEveryMillisec(int millisec, int moveTIme, int curveRate);
+    void curveLeft();
+    void curveLeft(int powerLevel);
+    void curveLeft(int powerLevel, int curveRate);
+    void curveLeftEveryMillisec(int millisec);
+    void curveLeftEveryMillisec(int millisec, int moveTime);
+    void curveLeftEveryMillisec(int millisec, int moveTIme, int curveRate);
     void halt();
     void halt(bool RotateDirectionRecording);
     void haltQuick();

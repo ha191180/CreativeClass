@@ -59,6 +59,8 @@ void body::debugOut(){
   Serial.print("\n");
   Serial.print("isObjectDetected: ");
   Serial.println(isObjDetected());
+  Serial.print("isObjectTouched: ");
+  Serial.println(proxSens->isObjTouched() );
   Serial.print("#####################################\n\n");
 }
 
@@ -154,7 +156,7 @@ int body::pushObj(){
   int searchTypeSelector = 1;
   unsigned long sumoTimer = millis();
   unsigned long phase0Timer = millis();
-  const unsigned long sumoKillTime = 60; // sec
+  const unsigned long sumoKillTime = 20; // sec
   bool phase0 = true;
 
 
@@ -162,13 +164,13 @@ int body::pushObj(){
 
     if (searchTypeSelector == 0){
       proxSens->reload();
-      wheel->turnRight(70);
+      wheel->turnLeft(70);
       if (isEdge()){
         wheel->moveBackwardForMillisec(300, 100);
         wheel->halt();
         delay(500);
       }
-      if (millis() - phase0Timer > 1000 * 5){
+      if (millis() - phase0Timer > 1000 * 2){
         phase0Timer = millis();
         searchTypeSelector = 1;
       }
@@ -180,13 +182,14 @@ int body::pushObj(){
 
     else if (searchTypeSelector == 1){ // wide area search
       proxSens->reload();
-      wheel->curveRight(80);
+      wheel->curveLeft(80);
       if (isEdge()){
         wheel->moveBackwardForMillisec(300, 100);
         wheel->halt();
         phase0Timer = millis();
+        searchTypeSelector = 0;
       }
-      if (millis() - phase0Timer > 1000 * 2){
+      if (millis() - phase0Timer > 1000 * 1.5){
         phase0Timer = millis();
         searchTypeSelector = 0;
       }
@@ -198,12 +201,12 @@ int body::pushObj(){
 
     else if (searchTypeSelector == 3){
       proxSens->reload();
-      wheel->turnLeftEveryMillisec(500,3);
+      wheel->turnRight(50);
       if (isEdge()){
         phase0Timer = millis();
         searchTypeSelector = 1;
       }
-      if (millis() - phase0Timer > 1000 * 7){
+      if (millis() - phase0Timer > 1000 * 1.5){
         phase0Timer = millis();
         searchTypeSelector = 1;
       }
@@ -223,6 +226,8 @@ int body::pushObj(){
     proxSens->reload();
 
     if (isEdge()){
+      wheel->moveBackwardForMillisec(300);
+      wheel->turnLeft180();
       phase1 = false;
       return 0;
     }
@@ -264,7 +269,7 @@ int body::pushObj(){
         break;
       }
       else {
-        wheel->moveForward(70);
+        wheel->moveForward(60);
       }
     }
     else{
@@ -299,7 +304,7 @@ int body::pushObj(){
       else {
         wheel->moveBackwardForMillisec(300);
         delay(500);
-        wheel->turnRightEveryMillisec(100,6);
+        wheel->turnLeft180();
         delay(500);
         return 0;
       }
@@ -325,7 +330,7 @@ int body::pushObj(){
     }
   }
 
-  if (millis() - sumoTimer >= sumoKillTime ) return 1;
+  if (millis() - sumoTimer >= sumoKillTime * 1000 ) return 1;
 
 }
 
