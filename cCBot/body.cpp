@@ -453,9 +453,10 @@ void body::swmode(){
   */
   ltSens->reload();
   bool onCourse = false;
+  int tryalCount = 0;
   while (!onCourse)
   {
-    while (!(ltSens->get() bitand 0b1000))
+    while (!(ltSens->get() bitand 0b1110))
     {
       if (ltSens->get() bitand 0b0001){
         wheel->turnLeftEveryMillisec(500,4);
@@ -463,35 +464,32 @@ void body::swmode(){
       else {
         wheel->curveRight(65,15);
       }
-      
       ltSens->reload();
-
-      if (ltSens->get() bitand 0b0100){
-        onCourse = true;
-        break;
-      }
-      if (ltSens->get() == 0b1001){
-        onCourse = true;
-        break;
-      }
     }
-    if (onCourse) break;
 
     wheel->halt();
     delay(500);
     ltSens->reload();
-
-    if (ltSens->get() bitand 0b0110){
-        wheel->moveBackwardForMillisec(200,60);
-        wheel->turnLeftEveryMillisec(500, 3);
-      }
-    delay(500);
     
+    if (ltSens->get() == 0b1000){
+      if (tryalCount > 2){
+        onCourse = true;
+      }
+      else {
+        wheel->moveForwardEveryMillisec(250);
+        tryalCount++;
+        delay(500);
+      }
+
+    }
+    else {
+      tryalCount = 0;
+      wheel->moveBackwardForMillisec(200);
+      wheel->turnLeftEveryMillisec(100,3);
+    }
+    ltSens->reload();
   }
   
- 
-
-
 }
 
 void body::hilldown() {
