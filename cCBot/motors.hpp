@@ -12,6 +12,7 @@ class motors{
     unsigned long turnLeftEveryMillisecTimer = 0;
     unsigned long turnLeftForMillisecTimer = 0;
     unsigned long turnRightEveryMillisecTimer = 0;
+    unsigned long turnRightForMillisecTimer = 0;
     unsigned long goLeftInverseEveryMillisecTimer = 0;
     unsigned long curveRightEveryMillisecTimer = 0;
     
@@ -40,6 +41,8 @@ class motors{
     void turnLeftEveryMillisec(int millisec, int moveTime); // moveTime: 1-3 are recommended
     void turnLeftForMillisec(int millisec);
     void turnLeftForMillisec(int millisec, int powerLevel);
+    void turnRightForMillisec(int millisec);
+    void turnRightForMillisec(int millisec, int powerLevel);
     void goRight();
     void goRight(int powerLevel);
     void goLeft();

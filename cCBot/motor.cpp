@@ -19,31 +19,25 @@ motor::motor(int revPinInput, int pwmPinInput){
 
 void motor::forward(){
   rotateDirection = 1;
-  digitalWrite(_revPin, HIGH);
+  digitalWrite(_revPin, LOW);
   analogWrite(_pwmPin, int(DEFAULTVALUE*bias));
 }
 
 void motor::forward(int inputValue){
   rotateDirection = 1;
-  digitalWrite(_revPin, HIGH);
+  digitalWrite(_revPin, LOW);
   analogWrite(_pwmPin, int(inputValue*bias));
 }
 
 void motor::backward(){
   rotateDirection = -1;
-  digitalWrite(_revPin, LOW);
+  digitalWrite(_revPin, HIGH);
   analogWrite(_pwmPin, int(DEFAULTVALUE*bias));
 }
 
 void motor::backward(int inputValue){
-  /*
-  if (rotateDirection != -1){
-    for (int i = 0; i < 15000; i++){
-      backward();
-    }
-    */
   rotateDirection = -1;
-  digitalWrite(_revPin, LOW);
+  digitalWrite(_revPin, HIGH);
   analogWrite(_pwmPin, int(inputValue*bias));
 }
 
@@ -61,6 +55,7 @@ void motor::haltQuick(){
   rotateDirection = 0;
   analogWrite(_pwmPin, 0);
 }
+
 
 void motor::halt(){
   rotateDirection = 0;

@@ -21,12 +21,12 @@ class body {
 	private:
 		// VARIABLE ///////////////////////////////////////////////////////////////////////
 		// Pin for left motor
-		const int lMotorPwmPin = 10;
-		const int lMotorRevPin = 12;
+		const int lMotorPwmPin = 9;
+		const int lMotorRevPin = 8;
 
 		// Pin for right motor
-		const int rMotorPwmPin = 9;
-		const int rMotorRevPin = 8;
+		const int rMotorPwmPin = 10;
+		const int rMotorRevPin = 12;
 
 		// Pin for linetrace sensor
 		const int rrTraceSensorPin = 2; // Right Right

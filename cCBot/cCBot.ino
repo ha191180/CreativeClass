@@ -1,12 +1,5 @@
 #include "body.hpp"
 
-enum modes {
-  mSumo,
-  mSwitch,
-  mBrake,
-  mTrace
-};
-
 body robot;
 
 void Debug() {
@@ -21,9 +14,9 @@ void Test() {
 /////////////////////////////////////////
 
 void Main() {
-  enum modes runMode = mSumo;
-  robot.sumo();
-  while (true);
+  // robot.sumo();
+  robot.swmode();
+  robot.haltForever();
 }
 
 void setup(){
@@ -32,9 +25,9 @@ void setup(){
 }
 
 void loop(){
-  //Test();
-  //Main();
-  Debug();
+  // Test();
+  Main();
+  // Debug();
 }
 
 

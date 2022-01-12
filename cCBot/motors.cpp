@@ -123,6 +123,25 @@ void motors::turnLeftEveryMillisec(int milliSecond, int moveTime){
   }
 }
 
+void motors::turnLeftForMillisec(int millisec){
+  turnLeftForMillisecTimer = millis();
+  while (millis() - turnLeftForMillisecTimer < millisec) {
+    lp->backward();
+    rp->forward();
+  }
+  halt();
+}
+
+void motors::turnLeftForMillisec(int millisec, int powerLevel){
+  turnLeftForMillisecTimer = millis();
+  while (millis() - turnLeftForMillisecTimer < millisec) {
+    lp->backward(powerLevel);
+    rp->forward(powerLevel);
+  }
+  halt();
+}
+
+
 
 void motors::turnRight(){
   lp->forward();
@@ -155,6 +174,26 @@ void motors::turnRightEveryMillisec(int milliSecond, int moveTime){
     turnRightEveryMillisecTimer = millis();
   }
 }
+
+void motors::turnRightForMillisec(int millisec){
+  turnRightForMillisecTimer = millis();
+  while (millis() - turnRightForMillisecTimer < millisec) {
+    rp->backward();
+    lp->forward();
+  }
+  halt();
+}
+
+void motors::turnRightForMillisec(int millisec, int powerLevel){
+  turnRightForMillisecTimer = millis();
+  while (millis() - turnRightForMillisecTimer < millisec) {
+    rp->backward(powerLevel);
+    lp->forward(powerLevel);
+  }
+  halt();
+}
+
+
 
 void motors::turnRight180(){
   for (int i = 0; i < 10000; i++){
@@ -222,14 +261,7 @@ void motors::goLeftInverseEveryMillisec(int millisec, int moveTime){
   }
 }
 
-void motors::turnLeftForMillisec(int millisec){
-  turnLeftForMillisecTimer = millis();
-  while (millis() - turnLeftForMillisecTimer < millisec) {
-    lp->backward();
-    rp->forward();
-  }
-  halt();
-}
+
 
 void motors::curveRight(){
   rp -> forward(255/2);
