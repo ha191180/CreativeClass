@@ -353,52 +353,55 @@ void body::swmode(){
         // Exception
         break;
       case 3: // 0011
-        wheel->halt();
-        endPhase1 = true;
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(90,80);
         break;
       case 4: // 0100
         // Exception
         break;
       case 5: // 0101
-        // Exception
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 6: // 0110
-        // Exception
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 7: // 0111
-        wheel->halt();
-        endPhase1 = true;
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 8: // 1000
-        wheel->moveBackwardForMillisec(150,50);
-        wheel->turnLeftForMillisec(90,60);
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 9: // 1001
-        wheel->moveBackwardForMillisec(200,60);
-        wheel->turnLeftForMillisec(90,60);
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 10: // 1010
-        // Exception
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 11: // 1011
-        wheel->moveBackwardForMillisec(200,60);
-        wheel->turnLeftForMillisec(90,60);
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 12: // 1100
-        wheel->moveBackwardForMillisec(200,60);
-        wheel->turnLeftEveryMillisec(100,2);
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 13: // 1101
-        wheel->moveBackwardForMillisec(200,60);
-        wheel->turnLeftForMillisec(90,60);
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 14: // 1110
-        wheel->moveBackwardForMillisec(200,60);
-        wheel->turnLeftEveryMillisec(100,2);
+        wheel->moveBackwardForMillisec(200,100);
+        wheel->turnLeftForMillisec(100,70);
         break;
       case 15: // 1111
-        wheel->moveBackwardForMillisec(200,60);
-        wheel->turnLeftEveryMillisec(100,2);
+        wheel->moveBackwardForMillisec(200,70);
+        wheel->turnLeftForMillisec(100,70);
         break;
     }
   }
