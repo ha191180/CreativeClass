@@ -16,6 +16,8 @@ void Test() {
 void Main() {
   robot.sumo();
   robot.swmode();
+  robot.hilldown();
+  robot.lineTrace();
   robot.haltForever();
 }
 
