@@ -508,10 +508,10 @@ void body::hilldown() {
     if (ltSens->get() bitand 0b1000 && ltSens->get() bitand 0b0100) {
         wheel->halt();
         delay(500);
-        wheel->moveForwardEveryMillisec(1);
+        wheel->turnLeftEveryMillisec(1);
         delay(100);
         ltSens->reload();
-        if(ltSens->get() == 0b1100) endPhase1 = true;
+        if((ltSens->get() bitand 0b1100) == 0b1100) endPhase1 = true;
         break;
     }
     switch (senstmp) {

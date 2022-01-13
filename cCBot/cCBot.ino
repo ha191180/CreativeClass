@@ -14,7 +14,7 @@ void Test() {
 /////////////////////////////////////////
 
 void Main() {
-  robot.sumo();
+  // robot.sumo();
   robot.swmode();
   robot.hilldown();
   robot.lineTrace();
@@ -28,8 +28,8 @@ void setup(){
 
 void loop(){
   // Test();
-  // Main();
-  Debug();
+  Main();
+  // Debug();
 }
 
 
