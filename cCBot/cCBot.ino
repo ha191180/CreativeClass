@@ -28,8 +28,8 @@ void setup(){
 
 void loop(){
   // Test();
-  Main();
-  // Debug();
+  // Main();
+  Debug();
 }
 
 

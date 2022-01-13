@@ -25,7 +25,7 @@ void proximitySensors::reloadEveryMillisec(int milliSecond){
 }
 
 bool proximitySensors::isObjDetected(){
-  if (abs(lp->get() - rp->get()) < OBJSIZE && abs(lp->get() - cp->get()) < OBJSIZE && abs(cp->get() - rp->get()) < OBJSIZE && lp->get() < 100 && cp->get() < 100 && rp ->get() < 100){
+  if (abs(lp->get() - rp->get()) < OBJSIZE && abs(lp->get() - cp->get()) < OBJSIZE && abs(cp->get() - rp->get()) < OBJSIZE && lp->get() < 40&& cp->get() < 40&& rp ->get() < 40){
     return true;
   }
   else return false;

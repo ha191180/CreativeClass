@@ -239,15 +239,15 @@ int body::pushObj(){
     else{
       if (proxSens->isAimLeft())
       {
-        wheel->turnRightEveryMillisec(500);
+        wheel->turnRightEveryMillisec(500,2);
       }
       else if (proxSens->isAimRight()) 
       {
-        wheel->turnLeftEveryMillisec(500);
+        wheel->turnLeftEveryMillisec(500,2);
       }
       else 
       {
-        wheel->moveForwardEveryMillisec(500,1);
+        wheel->moveForwardEveryMillisec(500,2);
       }
     }
 
