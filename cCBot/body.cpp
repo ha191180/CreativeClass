@@ -94,7 +94,7 @@ bool body::isEdge(){
       total += bool(ltSens->get() bitand b);
     }
   }
-  if (total > 100){
+  if (total >= 100){
     return true;
   }
   else return false;
