@@ -161,13 +161,13 @@ int body::pushObj(){
 
     if (searchTypeSelector == 0){
       proxSens->reload();
-      wheel->turnRight(100);
+      wheel->turnRight(80);
       if (isEdge()){
         wheel->moveBackwardForMillisec(300, 100);
         wheel->halt();
         delay(500);
       }
-      if (millis() - phase0Timer > 1000 * 7){
+      if (millis() - phase0Timer > 1000 * 4){
         phase0Timer = millis();
         searchTypeSelector = 1;
       }
