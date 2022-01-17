@@ -336,25 +336,25 @@ void body::simpleLinetrace(){
     }
     switch (senstmp) {
       case 0: // 0000
-        wheel->moveForward(60);
+        wheel->moveForward(70);
         break;
       case 1: // 0001
 
         break;
       case 2: // 0010
-        wheel->goRight(60);
+        wheel->goRight(80);
         break;
       case 3: // 0011
 
         break;
       case 4: // 0100
-        wheel->goLeft(60);
+        wheel->goLeft(80);
         break;
       case 5: // 0101
       
         break;
       case 6: // 0110
-        wheel->moveForward(60);
+        wheel->moveForward(70);
         break;
       case 7: // 0111
       
@@ -603,7 +603,7 @@ void body::hilldown() {
     if (ltSens->get() bitand 0b0010){
       wheel->turnRightEveryMillisec(10,2);
     }
-    wheel->moveBackwardEveryMillisec(200,2);
+    wheel->moveBackwardEveryMillisec(300,2);
     
   }
   while(millis() - hillDownTimer < 1000 * 4){
@@ -617,16 +617,80 @@ void body::hilldown() {
 
   }
 
-
+  // PHASE3 ///////////////////////////////////////////// set the next position
   delay(1000);
-  simpleLinetrace();
+
+  // Low Power Linetrace
+  ltSens->reload();
+  byte senstmp = ltSens->get();
+  bool endPhase1 = false;
+  while (!endPhase1){
+    ltSens->reload();
+    senstmp = ltSens->get(); //senstmp = 0b0000 (ll) (lc) (rc) (rr) ex. 0b00001100
+    if (senstmp bitand 0b1001){
+      endPhase1 = true;
+      break;
+    }
+    switch (senstmp) {
+      case 0: // 0000
+        wheel->moveForward(60);
+        break;
+      case 1: // 0001
+
+        break;
+      case 2: // 0010
+        wheel->goRight(60);
+        break;
+      case 3: // 0011
+
+        break;
+      case 4: // 0100
+        wheel->goLeft(60);
+        break;
+      case 5: // 0101
+      
+        break;
+      case 6: // 0110
+        wheel->moveForward(60);
+        break;
+      case 7: // 0111
+      
+        break;
+      case 8: // 1000
+      
+        break;
+      case 9: // 1001
+      
+        break;
+      case 10: // 1010
+      
+        break;
+      case 11: // 1011
+      
+        break;
+      case 12: // 1100
+      
+        break;
+      case 13: // 1101
+      
+        break;
+      case 14: // 1110
+      
+        break;
+      case 15: // 1111
+      
+        break;
+    }
+  }
+  
+
   delay(500);
-  wheel->moveForwardForMillisec(80);
+  wheel->moveForwardForMillisec(20);
   delay(500);
   ltSens->reload();
   while (!(ltSens->get() bitand 0b0010)){
     ltSens->reload();
-    wheel->goLeft(110);
+    wheel->goLeft(120);
   }
   wheel->turnLeftForMillisec(1,200);
   wheel->halt();
