@@ -232,6 +232,22 @@ void motors::goRight(int powerLevel){
   rp->halt();
 }
 
+void motors::goRightForMillisec(int millisec){
+  goRightForMillisecTimer = millis();
+  while (millis() - goRightForMillisecTimer < millisec){
+    this->goRight();
+  }
+  this->halt();
+}
+
+void motors::goRightForMillisec(int millisec, int powerLevel){
+  goRightForMillisecTimer = millis();
+  while (millis() - goRightForMillisecTimer < millisec){
+    this->goRight(powerLevel);
+  }
+  this->halt();
+}
+
 void motors::goLeft(){
   rp->forward();
   lp->halt();
@@ -240,6 +256,22 @@ void motors::goLeft(){
 void motors::goLeft(int powerLevel){
   rp->forward(powerLevel);
   lp->halt();
+}
+
+void motors::goLeftForMillisec(int millisec){
+  goLeftForMillisecTimer = millis();
+  while (millis() - goLeftForMillisecTimer < millisec){
+    this->goLeft();
+  }
+  this->halt();
+}
+
+void motors::goLeftForMillisec(int millisec, int powerLevel){
+  goLeftForMillisecTimer = millis();
+  while (millis() - goLeftForMillisecTimer < millisec){
+    this->goLeft(powerLevel);
+  }
+  this->halt();
 }
 
 void motors::goRight90(){
