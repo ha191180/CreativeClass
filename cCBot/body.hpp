@@ -59,6 +59,10 @@ class body {
 		bool isEdge(); //return boolean value. true: a object is dropped from the field.
 		int pushObj();
 
+
+		// functions for linetrace
+		void simpleLinetrace();
+
 		// debug
 		void debugOut();
 };
