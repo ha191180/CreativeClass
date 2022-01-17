@@ -699,6 +699,24 @@ void body::hilldown() {
 }
 
 void body::lineTrace() {
-  simpleLinetrace();
+  int directionSize = 10;
+  char direction[directionSize] = {'L', 'R', 'L', 'R', 'L', 'R', 'L', 'R', 'L', 'S'};
+  for(int i=0; i<directionSize; i++){
+    simpleLinetrace();
+    switch (direction[i])
+    {
+    case 'L':
+      // code
+      break;
+    
+    case 'R':
+      // code
+      break;
+
+    case 'S': //straight
+      // code
+      break;
+    } 
+  }
   return;
 }
