@@ -25,6 +25,8 @@ class motors{
     void moveForward(int inputValue);
     void moveForwardEveryMillisec(int millisec);
     void moveForwardEveryMillisec(int millisec, int moveTime); // moveTime: 1-3 are recommended
+    void moveForwardForMillisec(int millisec);
+    void moveForwardForMillisec(int millisec, int powerLevel);
     void moveBackward();
     void moveBackwardForMillisec(int millisec);
     void moveBackwardForMillisec(int millisec, int powerLevel);

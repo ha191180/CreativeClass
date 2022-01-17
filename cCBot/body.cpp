@@ -500,47 +500,60 @@ void body::hilldown() {
 
   // PHASE1 //////////////////////////////////////////// ON ITS MARK ////
   ltSens->reload();
+  while (!(ltSens->get() bitand 0b0001)){
+    ltSens->reload();
+    wheel->goLeft(100);
+  }
+  wheel->halt();
+  delay(500);
+  wheel->goLeftInverseEveryMillisec(1,2);
+  ltSens->reload();
+  while(!(ltSens->get() bitand 0b0100)){
+    ltSens->reload();
+    wheel->goRight(100);
+    wheel->moveBackwardEveryMillisec(1000);
+  }
+  wheel->halt();
+
+
+  // simple linetrace
+  ltSens->reload();
   byte senstmp = ltSens->get();
   bool endPhase1 = false;
   while (!endPhase1){
     ltSens->reload();
     senstmp = ltSens->get(); //senstmp = 0b0000 (ll) (lc) (rc) (rr) ex. 0b00001100
-    if (ltSens->get() bitand 0b1000 && ltSens->get() bitand 0b0100) {
-        wheel->halt();
-        delay(500);
-        wheel->turnLeftEveryMillisec(1);
-        delay(100);
-        ltSens->reload();
-        if((ltSens->get() bitand 0b1100) == 0b1100) endPhase1 = true;
-        break;
+    if (senstmp bitand 0b1001){
+      endPhase1 = true;
+      break;
     }
     switch (senstmp) {
       case 0: // 0000
-        wheel->moveForward(50);
+        wheel->moveForward(60);
         break;
       case 1: // 0001
 
         break;
       case 2: // 0010
-      
+        wheel->goRight(70);
         break;
       case 3: // 0011
 
         break;
       case 4: // 0100
-        wheel->goRight(80);
+        wheel->goLeft(70);
         break;
       case 5: // 0101
       
         break;
       case 6: // 0110
-      
+        wheel->moveForward(60);
         break;
       case 7: // 0111
       
         break;
       case 8: // 1000
-        wheel->goLeft(80);
+      
         break;
       case 9: // 1001
       
@@ -551,9 +564,8 @@ void body::hilldown() {
       case 11: // 1011
       
         break;
-      /*
       case 12: // 1100
-
+      
         break;
       case 13: // 1101
       
@@ -562,27 +574,26 @@ void body::hilldown() {
       
         break;
       case 15: // 1111
-      */
       
         break;
     }
   }
 
-  wheel->moveForwardEveryMillisec(1);
+  wheel->moveForwardForMillisec(80);
   delay(500);
   ltSens->reload();
   while (!(ltSens->get() bitand 0b0010)){
     ltSens->reload();
-    wheel->goLeft(90);
+    wheel->goLeft(100);
   }
-  wheel->turnLeftEveryMillisec(1,2);
+  wheel->turnLeftForMillisec(20,200);
   wheel->halt();
   delay(500);
   // PHASE 2 //////////////////////////////////////////// down the hill.
   wheel->punch();
-  delay(1000);
+  delay(500);
   unsigned long hillDownTimer = millis();
-  while (millis() - hillDownTimer < 1000 * 1){
+  while (millis() - hillDownTimer < 1000 * 3.5){
     ltSens->reload();
     if (ltSens->get() bitand 0b0100){
       wheel->turnLeftEveryMillisec(100,1);
@@ -590,19 +601,38 @@ void body::hilldown() {
     if (ltSens->get() bitand 0b0010){
       wheel->turnRightEveryMillisec(100,1);
     }
-    wheel->moveForwardEveryMillisec(1000,2);
+    wheel->moveBackwardEveryMillisec(1000,2);
     
   }
-  while(millis() - hillDownTimer < 1000 * 2){
+  while(millis() - hillDownTimer < 1000 * 4){
     ltSens->reload();
-    if (ltSens->get() bitand 0b0100){
-      wheel->turnLeftEveryMillisec(100,1);
+    if (ltSens->get() bitand 0b1100){
+      wheel->turnLeftEveryMillisec(100,2);
     }
-    if (ltSens->get() bitand 0b0010){
-      wheel->turnRightEveryMillisec(100,1);
+    if (ltSens->get() bitand 0b0011){
+      wheel->turnRightEveryMillisec(100,2);
     }
     wheel->moveBackwardEveryMillisec(100);
   }
+
+
+  delay(1000);
+
+
+  ltSens->reload();
+  while (ltSens->get() != 0b0000)
+  {
+    wheel->moveForward(80);
+    ltSens->reload();
+  }
+
+  while (!(ltSens->get() bitand 0b0010))
+  {
+    wheel->goLeft(110);
+    ltSens->reload();
+  }
+  wheel->halt();
+
 }
 
 void body::lineTrace() {
@@ -626,13 +656,13 @@ void body::lineTrace() {
 
         break;
       case 2: // 0010
-        wheel->goLeft(60);
+        wheel->goRight(60);
         break;
       case 3: // 0011
 
         break;
       case 4: // 0100
-        wheel->goRight(60);
+        wheel->goLeft(60);
         break;
       case 5: // 0101
       

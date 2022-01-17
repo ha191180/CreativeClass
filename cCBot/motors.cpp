@@ -41,6 +41,25 @@ void motors::moveForwardEveryMillisec(int milliSecond, int moveTime){
   }
 }
 
+void motors::moveForwardForMillisec(int millisec){
+  unsigned long moveForwardForMillisecTimer = millis();
+  while(millis() - moveForwardForMillisecTimer < millisec){
+    lp->forward();
+    rp->forward();
+  }
+  this->halt();
+}
+
+void motors::moveForwardForMillisec(int millisec, int powerLevel){
+  unsigned long moveForwardForMillisecTimer = millis();
+  while(millis() - moveForwardForMillisecTimer < millisec){
+    lp->forward(powerLevel);
+    rp->forward(powerLevel);
+  }
+  this->halt();
+}
+
+
 void motors::moveBackward(){
   lp->backward();
   rp->backward();
