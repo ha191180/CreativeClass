@@ -161,7 +161,8 @@ int body::pushObj(){
 
     if (searchTypeSelector == 0){
       proxSens->reload();
-      wheel->turnRight(80);
+      wheel->curveRight(80,80
+      );
       if (isEdge()){
         wheel->moveBackwardForMillisec(300, 100);
         wheel->halt();
@@ -331,12 +332,13 @@ void body::simpleLinetrace(){
     ltSens->reload();
     senstmp = ltSens->get(); //senstmp = 0b0000 (ll) (lc) (rc) (rr) ex. 0b00001100
     if (senstmp bitand 0b1001){
+      wheel->halt();
       endPhase1 = true;
       break;
     }
     switch (senstmp) {
       case 0: // 0000
-        wheel->moveForward(70);
+        wheel->moveForward(60);
         break;
       case 1: // 0001
 
@@ -354,7 +356,7 @@ void body::simpleLinetrace(){
       
         break;
       case 6: // 0110
-        wheel->moveForward(70);
+        wheel->moveForward(60);
         break;
       case 7: // 0111
       
@@ -389,6 +391,72 @@ void body::simpleLinetrace(){
 }
 
 
+inline void body::slowLinetrace(){
+  ltSens->reload();
+  byte senstmp = ltSens->get();
+  bool endPhase1 = false;
+  while (!endPhase1){
+    ltSens->reload();
+    senstmp = ltSens->get(); //senstmp = 0b0000 (ll) (lc) (rc) (rr) ex. 0b00001100
+    if (senstmp bitand 0b1001){
+      wheel->halt();
+      endPhase1 = true;
+      break;
+    }
+    switch (senstmp) {
+      case 0: // 0000
+        wheel->moveForward(60);
+        break;
+      case 1: // 0001
+
+        break;
+      case 2: // 0010
+        wheel->goRight(60);
+        break;
+      case 3: // 0011
+
+        break;
+      case 4: // 0100
+        wheel->goLeft(60);
+        break;
+      case 5: // 0101
+      
+        break;
+      case 6: // 0110
+        wheel->moveForward(60);
+        break;
+      case 7: // 0111
+      
+        break;
+      case 8: // 1000
+      
+        break;
+      case 9: // 1001
+      
+        break;
+      case 10: // 1010
+      
+        break;
+      case 11: // 1011
+      
+        break;
+      case 12: // 1100
+      
+        break;
+      case 13: // 1101
+      
+        break;
+      case 14: // 1110
+      
+        break;
+      case 15: // 1111
+      
+        break;
+    }
+  }
+  return;
+}
+
 void body::sumo(){
   int count = 0;
   while (count < 3)
@@ -409,7 +477,7 @@ void body::swmode(){
     senstmp = ltSens->get(); //senstmp = 0b0000 (ll) (lc) (rc) (rr) ex. 0b00001100
     switch (senstmp) {
       case 0: // 0000
-        wheel->moveForward(70);
+        wheel->moveForward(60);
         break;
       case 1: // 0001
         wheel->halt();
@@ -528,10 +596,10 @@ void body::swmode(){
     while (!(ltSens->get() bitand 0b1110))
     {
       if (ltSens->get() bitand 0b0001){
-        wheel->turnLeftEveryMillisec(500,4);
+        wheel->turnLeftEveryMillisec(400,2);
       }
       else {
-        wheel->curveRight(65,15);
+        wheel->curveRight(60,30);
       }
       ltSens->reload();
     }
@@ -540,8 +608,8 @@ void body::swmode(){
     delay(500);
     ltSens->reload();
     
-    if (ltSens->get() == 0b1000){
-      if (tryalCount > 2){
+    if (ltSens->get() == 0b1000 | ltSens->get() == 0b0100){
+      if (tryalCount > 1){
         onCourse = true;
       }
       else {
@@ -553,12 +621,11 @@ void body::swmode(){
     }
     else {
       tryalCount = 0;
-      wheel->moveBackwardForMillisec(200);
-      wheel->turnLeftEveryMillisec(100,3);
+      wheel->moveBackwardForMillisec(180);
+      wheel->turnLeftEveryMillisec(100,2);
     }
     ltSens->reload();
-  }
-  
+  }  
 }
 
 void body::hilldown() {
@@ -567,7 +634,7 @@ void body::hilldown() {
   ltSens->reload();
   while (!(ltSens->get() bitand 0b0001)){
     ltSens->reload();
-    wheel->goLeft(100);
+    wheel->goLeft(90);
   }
   wheel->halt();
   delay(500);
@@ -575,38 +642,45 @@ void body::hilldown() {
   ltSens->reload();
   while(!(ltSens->get() bitand 0b0100)){
     ltSens->reload();
-    wheel->goRight(100);
+    wheel->goRight(90);
     wheel->moveBackwardEveryMillisec(1000,2);
   }
   wheel->halt();
-  simpleLinetrace();
+  slowLinetrace();
   delay(500);
-  wheel->moveForwardForMillisec(80);
-  delay(500);
+
+  wheel->moveForwardForMillisec(180,100);
+
+  delay(1000);
   ltSens->reload();
   while (!(ltSens->get() bitand 0b0010)){
     ltSens->reload();
-    wheel->goLeft(110);
+    wheel->goLeft(50);
+    wheel->moveBackwardEveryMillisec(2000);
   }
-  wheel->turnLeftForMillisec(1,200);
+
+  wheel->goLeftInverseEveryMillisec(1, 3);
+
+
   wheel->halt();
   delay(500);
+
   // PHASE 2 //////////////////////////////////////////// down the hill.
   wheel->punch();
-  delay(500);
+  delay(300);
   unsigned long hillDownTimer = millis();
-  while (millis() - hillDownTimer < 1000 * 3){
+  while (millis() - hillDownTimer < 1000 * 2){
     ltSens->reload();
     if (ltSens->get() bitand 0b0100){
-      wheel->turnLeftEveryMillisec(10,2);
+      wheel->turnLeftEveryMillisec(10,1);
     }
     if (ltSens->get() bitand 0b0010){
-      wheel->turnRightEveryMillisec(10,2);
+      wheel->turnRightEveryMillisec(10,1);
     }
-    wheel->moveBackwardEveryMillisec(300,2);
+    wheel->moveBackwardEveryMillisec(200,2);
     
   }
-  while(millis() - hillDownTimer < 1000 * 4){
+  while(millis() - hillDownTimer < 1000 * 3){
     ltSens->reload();
     if (ltSens->get() bitand 0b1100){
       wheel->turnLeftEveryMillisec(50,1);
@@ -614,85 +688,23 @@ void body::hilldown() {
     if (ltSens->get() bitand 0b0011){
       wheel->turnRightEveryMillisec(50,1);
     }
+    wheel->moveBackwardEveryMillisec(300,1);
 
   }
 
   // PHASE3 ///////////////////////////////////////////// set the next position
-  delay(1000);
 
-  // Low Power Linetrace
-  ltSens->reload();
-  byte senstmp = ltSens->get();
-  bool endPhase1 = false;
-  while (!endPhase1){
-    ltSens->reload();
-    senstmp = ltSens->get(); //senstmp = 0b0000 (ll) (lc) (rc) (rr) ex. 0b00001100
-    if (senstmp bitand 0b1001){
-      endPhase1 = true;
-      break;
-    }
-    switch (senstmp) {
-      case 0: // 0000
-        wheel->moveForward(60);
-        break;
-      case 1: // 0001
+  slowLinetrace();
 
-        break;
-      case 2: // 0010
-        wheel->goRight(60);
-        break;
-      case 3: // 0011
-
-        break;
-      case 4: // 0100
-        wheel->goLeft(60);
-        break;
-      case 5: // 0101
-      
-        break;
-      case 6: // 0110
-        wheel->moveForward(60);
-        break;
-      case 7: // 0111
-      
-        break;
-      case 8: // 1000
-      
-        break;
-      case 9: // 1001
-      
-        break;
-      case 10: // 1010
-      
-        break;
-      case 11: // 1011
-      
-        break;
-      case 12: // 1100
-      
-        break;
-      case 13: // 1101
-      
-        break;
-      case 14: // 1110
-      
-        break;
-      case 15: // 1111
-      
-        break;
-    }
-  }
-  
-
-  delay(500);
-  wheel->moveForwardForMillisec(20);
-  delay(500);
+  // wheel->moveBackwardForMillisec(20);
+  delay(400);
+  wheel->goLeftForMillisec(500,100);
   ltSens->reload();
   while (!(ltSens->get() bitand 0b0010)){
     ltSens->reload();
-    wheel->goLeft(120);
+    wheel->goLeft(80);
+    wheel->moveBackwardEveryMillisec(2000,2);
   }
-  wheel->turnLeftForMillisec(1,200);
   wheel->halt();
   delay(500);
 
@@ -701,23 +713,51 @@ void body::hilldown() {
 
 }
 
+
 void body::lineTrace() {
   int directionSize = 10;
-  char direction[directionSize] = {'L', 'R', 'L', 'R', 'L', 'R', 'L', 'R', 'L', 'S'};
+  char direction[directionSize] = {'L', 'S', 'S', 'L', 'R', 'S', 'S', 'R', 'L', 'L'};
   for(int i=0; i<directionSize; i++){
     simpleLinetrace();
     switch (direction[i])
     {
     case 'L':
-      // code
+      wheel->goLeftForMillisec(500,100);
+      ltSens->reload();
+      while (!(ltSens->get() bitand 0b0010))
+      {
+        wheel->goLeft(90);
+        ltSens->reload();
+      }
+      wheel->halt();
+
+      delay(500);
+      wheel->moveBackwardForMillisec(300, 100);
+      
       break;
     
     case 'R':
-      // code
+      wheel->goRightForMillisec(500, 100);
+      ltSens->reload();
+      while (!(ltSens->get() bitand 0b0100))
+      {
+        wheel->goRight(90);
+        ltSens->reload();
+      }
+      wheel->halt();
+      
+      delay(500);
+      wheel->moveBackwardForMillisec(300, 100);
+
       break;
 
     case 'S': //straight
-      // code
+      while (ltSens->get() bitand 0b1001){
+        wheel->moveForward(110);
+        ltSens->reload();
+      }
+      wheel->halt();
+      delay(500);
       break;
     } 
   }

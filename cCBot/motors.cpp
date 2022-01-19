@@ -385,7 +385,7 @@ void motors::haltQuick(){
 }
 
 void motors::punch(){
-  for (int i = 0; i < 4000; i++){
+  for (int i = 0; i < 3500; i++){
     this->moveForward();
   }
   this->halt();
