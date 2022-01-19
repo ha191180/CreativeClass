@@ -648,13 +648,14 @@ void body::hilldown() {
   slowLinetrace();
   delay(500);
 
-  wheel->moveForwardForMillisec(200,100);
+  wheel->moveForwardForMillisec(190,100);
 
   delay(1000);
   ltSens->reload();
   while (!(ltSens->get() bitand 0b0010)){
     ltSens->reload();
-    wheel->goLeft(110);
+    wheel->goLeft(90);
+    wheel->moveBackwardEveryMillisec(1000);
   }
 
   wheel->goLeftInverseEveryMillisec(1, 2);
@@ -667,7 +668,7 @@ void body::hilldown() {
   wheel->punch();
   delay(500);
   unsigned long hillDownTimer = millis();
-  while (millis() - hillDownTimer < 1000 * 3){
+  while (millis() - hillDownTimer < 1000 * 2){
     ltSens->reload();
     if (ltSens->get() bitand 0b0100){
       wheel->turnLeftEveryMillisec(10,1);
@@ -678,7 +679,7 @@ void body::hilldown() {
     wheel->moveBackwardEveryMillisec(300,2);
     
   }
-  while(millis() - hillDownTimer < 1000 * 4){
+  while(millis() - hillDownTimer < 1000 * 3){
     ltSens->reload();
     if (ltSens->get() bitand 0b1100){
       wheel->turnLeftEveryMillisec(50,1);
@@ -686,6 +687,7 @@ void body::hilldown() {
     if (ltSens->get() bitand 0b0011){
       wheel->turnRightEveryMillisec(50,1);
     }
+    wheel->moveBackwardEveryMillisec(300,1);
 
   }
 
@@ -700,7 +702,7 @@ void body::hilldown() {
     ltSens->reload();
     senstmp = ltSens->get(); //senstmp = 0b0000 (ll) (lc) (rc) (rr) ex. 0b00001100
     if (senstmp bitand 0b1001){
-      wheel->haltQuick();
+      wheel->halt();
       endPhase1 = true;
       break;
     }
@@ -757,13 +759,13 @@ void body::hilldown() {
   }
   
 
-  delay(500);
-  wheel->moveForwardForMillisec(20);
+  wheel->moveBackwardForMillisec(20);
   delay(500);
   ltSens->reload();
   while (!(ltSens->get() bitand 0b0010)){
     ltSens->reload();
-    wheel->goLeft(90);
+    wheel->goLeft(110);
+    wheel->moveBackwardEveryMillisec(1000,1);
   }
   wheel->turnLeftForMillisec(1,200);
   wheel->halt();
