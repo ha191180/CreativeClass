@@ -62,6 +62,7 @@ class body {
 
 		// functions for linetrace
 		void simpleLinetrace();
+		void slowLinetrace();
 
 		// debug
 		void debugOut();
