@@ -161,7 +161,8 @@ int body::pushObj(){
 
     if (searchTypeSelector == 0){
       proxSens->reload();
-      wheel->turnRight(80);
+      wheel->curveRight(80,80
+      );
       if (isEdge()){
         wheel->moveBackwardForMillisec(300, 100);
         wheel->halt();
@@ -595,10 +596,10 @@ void body::swmode(){
     while (!(ltSens->get() bitand 0b1110))
     {
       if (ltSens->get() bitand 0b0001){
-        wheel->turnLeftEveryMillisec(500,2);
+        wheel->turnLeftEveryMillisec(400,2);
       }
       else {
-        wheel->curveRight(60,10);
+        wheel->curveRight(60,20);
       }
       ltSens->reload();
     }
@@ -648,17 +649,17 @@ void body::hilldown() {
   slowLinetrace();
   delay(500);
 
-  wheel->moveForwardForMillisec(190,100);
+  wheel->moveForwardForMillisec(200,100);
 
   delay(1000);
   ltSens->reload();
   while (!(ltSens->get() bitand 0b0010)){
     ltSens->reload();
-    wheel->goLeft(90);
-    wheel->moveBackwardEveryMillisec(1000);
+    wheel->goLeft(60);
+    wheel->moveBackwardEveryMillisec(3000);
   }
 
-  wheel->goLeftInverseEveryMillisec(1, 2);
+  wheel->goLeftInverseEveryMillisec(1, 3);
 
 
   wheel->halt();
@@ -759,12 +760,12 @@ void body::hilldown() {
   }
   
 
-  wheel->moveBackwardForMillisec(20);
+  // wheel->moveBackwardForMillisec(20);
   delay(500);
   ltSens->reload();
   while (!(ltSens->get() bitand 0b0010)){
     ltSens->reload();
-    wheel->goLeft(110);
+    wheel->goLeft(80);
     wheel->moveBackwardEveryMillisec(1000,1);
   }
   wheel->turnLeftForMillisec(1,200);
