@@ -716,12 +716,15 @@ void body::hilldown() {
 
 void body::lineTrace() {
   int directionSize = 10;
-  char direction[directionSize] = {'L', 'S', 'S', 'L', 'R', 'S', 'S', 'R', 'L', 'L'};
+  char direction[directionSize] = {'L', 'S', 'S', 'L', 'R', 'S', 'S', 'R', 'L', 'S'};
   for(int i=0; i<directionSize; i++){
     simpleLinetrace();
     switch (direction[i])
     {
     case 'L':
+      delay(1000);
+      wheel->moveForwardForMillisec(160,100);
+      delay(500);
       wheel->goLeftForMillisec(500,100);
       ltSens->reload();
       while (!(ltSens->get() bitand 0b0010))
@@ -729,14 +732,17 @@ void body::lineTrace() {
         wheel->goLeft(90);
         ltSens->reload();
       }
-      wheel->halt();
+      wheel->haltQuick();
 
       delay(500);
-      wheel->moveBackwardForMillisec(300, 100);
+      wheel->moveBackwardForMillisec(400, 100);
       
       break;
     
     case 'R':
+      delay(1000);
+      wheel->moveForwardForMillisec(160,100);
+      delay(500);
       wheel->goRightForMillisec(500, 100);
       ltSens->reload();
       while (!(ltSens->get() bitand 0b0100))
@@ -744,10 +750,10 @@ void body::lineTrace() {
         wheel->goRight(90);
         ltSens->reload();
       }
-      wheel->halt();
+      wheel->haltQuick();
       
       delay(500);
-      wheel->moveBackwardForMillisec(300, 100);
+      wheel->moveBackwardForMillisec(400, 100);
 
       break;
 
