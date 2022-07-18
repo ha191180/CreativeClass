@@ -1,5 +1,0 @@
-{
-    "board": "arduino:avr:uno",
-    "sketch": "cCBot/cCBot.ino",
-    "port": "/dev/cu.usbmodem14101"
-}
